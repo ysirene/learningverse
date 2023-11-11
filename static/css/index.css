@@ -1,0 +1,76 @@
+.container {
+  width: 1200px;
+  height: calc(100vh - 125px);
+  min-height: 450px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.slogan {
+  width: 45%;
+  margin: 80px auto;
+}
+.slogan__title {
+  margin-bottom: 40px;
+  color: #000;
+  font-size: 45px;
+  font-weight: 400;
+}
+.slogan__body {
+  margin-bottom: 50px;
+  color: #72788d;
+  font-size: 20px;
+  font-weight: 400;
+}
+.slogan__signin_btn {
+  margin-top: 20px;
+  padding: 5px 15px;
+  background-color: #afa2ff;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 400;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.search_classroom__input {
+  border-radius: 5px;
+  padding: 0 5px;
+  border: 1px solid #72788d;
+  width: 240px;
+  height: 45px;
+  font-size: 18px;
+}
+.search_classroom__btn {
+  padding: 5px 15px;
+  background-color: transparent;
+  border-radius: 5px;
+  border: none;
+  color: #404e4d;
+  font-size: 18px;
+  cursor: pointer;
+}
+.pictures__frame {
+  height: 400px;
+  width: 45%;
+  position: relative;
+}
+.pictures__1 {
+  position: absolute;
+  width: 174px;
+  top: 5%;
+  left: 45%;
+}
+.pictures__2 {
+  position: absolute;
+  width: 193px;
+  top: 30%;
+  left: 10%;
+}
+.pictures__3 {
+  position: absolute;
+  width: 175px;
+  top: 50%;
+  left: 55%;
+}

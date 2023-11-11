@@ -1,0 +1,29 @@
+<nav class="nav__background">
+  <div class="nav">
+    <div class="nav__logo">
+      <a href="/">
+        <img class="logo__img" src="image/logo.png" />
+        <div class="logo__name">Learningverse</div>
+      </a>
+    </div>
+    <div class="nav__menu">
+      <div class="nav__time"></div>
+      <button
+        class="nav__signin elem--hide"
+        onclick="toggleSigninSignup()"
+        id="nav__signinSignup"
+      >
+        登入/註冊
+      </button>
+      <button
+        class="nav__signin elem--hide"
+        id="nav__username"
+        onclick="toggleUserOption()"
+      ></button>
+      <div class="nav__user_options elem--hide">
+        <button class="user_options__btn">會員中心</button>
+        <button class="user_options__btn" onclick="signout()">登出系統</button>
+      </div>
+    </div>
+  </div>
+</nav>

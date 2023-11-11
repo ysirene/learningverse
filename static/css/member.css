@@ -1,0 +1,109 @@
+.member__background {
+  position: fixed;
+  z-index: 600;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  opacity: 0.4;
+  animation: member__background_fade_in 0.7s ease-in-out;
+}
+@keyframes member__background_fade_in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.4;
+  }
+}
+.member__container {
+  position: fixed;
+  z-index: 601;
+  top: 80px;
+  left: calc((100% - 340px) / 2);
+  width: 340px;
+  border-radius: 6px;
+  background-color: #fff;
+  animation: member__container_fade_in 0.7s ease-in-out;
+}
+@keyframes member__container_fade_in {
+  from {
+    opacity: 0;
+    top: 40px;
+  }
+  to {
+    opacity: 1;
+    top: 80px;
+  }
+}
+.member__decorator_bar {
+  width: 340px;
+  height: 10px;
+  border-radius: 6px 6px 0px 0px;
+  background-image: linear-gradient(to right, #e3d7ff, #afa2ff);
+  background-color: #afa2ff;
+}
+.member__close_icon {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background-image: url("../image/close_icon.png");
+  top: 27px;
+  right: 17px;
+  cursor: pointer;
+}
+.member__title {
+  margin: 15px 0;
+  text-align: center;
+  color: #666;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 27px;
+}
+.member__input {
+  display: block;
+  margin: 0 auto 10px;
+  padding: 15px;
+  width: 280px;
+  height: 17px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  color: #757575;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 17px;
+}
+.member__submit {
+  display: block;
+  margin: 0 auto 10px;
+  width: 310px;
+  height: 47px;
+  border-radius: 5px;
+  border: none;
+  background-color: #afa2ff;
+  text-align: center;
+  color: #fff;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 47px;
+  cursor: pointer;
+}
+.member__text--normal {
+  margin: 0 auto 10px;
+  color: #666;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22px;
+}
+.member__text--success {
+  color: green;
+  margin-bottom: 10px;
+}
+.member__text--error {
+  color: red;
+  margin-bottom: 10px;
+}
+.member__text--pointer {
+  cursor: pointer;
+}

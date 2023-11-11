@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="/css/navigation.css" />
+    <link rel="stylesheet" type="text/css" href="/css/member.css" />
+    <link rel="stylesheet" type="text/css" href="/css/footer.css" />
+    <link rel="stylesheet" type="text/css" href="/css/index.css" />
+    <title>Learningverse</title>
+  </head>
+  <body>
+    <%- include("partials/navigation") %> <%- include("partials/member") %>
+    <main class="container">
+      <section class="slogan">
+        <div class="slogan__title">開啟知識的大門<br />處處皆學堂</div>
+        <div class="slogan__body">
+          聚焦學習，忘卻距離，<br />探索未知的學習之旅。
+        </div>
+        <button class="slogan__signin_btn" onclick="toggleSigninSignup()">
+          登入/註冊
+        </button>
+        <form class="elem--hide" id="search_classroom">
+          <input
+            class="search_classroom__input"
+            type="text"
+            placeholder="輸入教室代碼或連結"
+            required
+          />
+          <button class="search_classroom__btn">進入</button>
+        </form>
+      </section>
+      <section class="pictures__frame">
+        <img src="/image/online-education-1.png" class="pictures__1" />
+        <img src="/image/online-education-2.png" class="pictures__2" />
+        <img src="/image/online-education-3.png" class="pictures__3" />
+      </section>
+    </main>
+    <%- include("partials/footer") %>
+    <script type="text/javascript" src="/js/navigation.js"></script>
+    <script type="text/javascript" src="/js/ajax.js"></script>
+    <script type="text/javascript" src="/js/member.js"></script>
+    <script type="text/javascript" src="/js/index.js"></script>
+  </body>
+</html>

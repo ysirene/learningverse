@@ -1,0 +1,72 @@
+<section>
+  <div class="member__background elem--hide"></div>
+  <div class="member__container elem--hide">
+    <div class="member__decorator_bar"></div>
+    <div class="member__title"></div>
+    <div class="member__close_icon" onclick="closeSigninSignup()"></div>
+    <div id="signin_item" class="elem--hide">
+      <form id="signin_form" onsubmit="signin(event)">
+        <input
+          class="member__input"
+          type="text"
+          name="email"
+          placeholder="輸入電子信箱"
+          required
+        />
+        <input
+          class="member__input"
+          type="password"
+          name="password"
+          placeholder="輸入密碼"
+          required
+        />
+        <input class="member__submit" type="submit" value="登入帳戶" />
+      </form>
+      <div class="member__text--normal" id="signin_text">
+        <div class="member__text--error"></div>
+        <span>還沒有帳戶？</span>
+        <span
+          class="member__text--pointer"
+          onclick="showSignupPage(); return false"
+          >點此註冊</span
+        >
+      </div>
+    </div>
+    <div id="signup_item" class="elem--hide">
+      <form id="signup_form" onsubmit="signup(event)">
+        <input
+          class="member__input"
+          type="text"
+          name="name"
+          placeholder="輸入姓名"
+          required
+        />
+        <input
+          class="member__input"
+          type="text"
+          name="email"
+          placeholder="輸入電子信箱"
+          required
+        />
+        <input
+          class="member__input"
+          type="password"
+          name="password"
+          placeholder="輸入密碼"
+          required
+        />
+        <input class="member__submit" type="submit" value="註冊新帳戶" />
+      </form>
+      <div class="member__text--normal" id="signin_text">
+        <div class="member__text--success"></div>
+        <div class="member__text--error"></div>
+        <span>已經有帳戶了？</span>
+        <span
+          class="member__text--pointer"
+          onclick="showSigninPage(); return false"
+          >點此登入</span
+        >
+      </div>
+    </div>
+  </div>
+</section>
