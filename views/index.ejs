@@ -21,15 +21,21 @@
         <button class="slogan__signin_btn" onclick="toggleSigninSignup()">
           登入/註冊
         </button>
-        <form class="elem--hide" id="search_classroom">
-          <input
-            class="search_classroom__input"
-            type="text"
-            placeholder="輸入教室代碼或連結"
-            required
-          />
-          <button class="search_classroom__btn">進入</button>
-        </form>
+        <section class="enter_room">
+          <button class="enter_room__create_btn">
+            開啟新教室<img src="/image/arrow-down-sign.png" />
+          </button>
+          <span class="enter_room__text">或者</span>
+          <form id="search_room">
+            <input
+              class="enter_room__search_input"
+              type="text"
+              placeholder="輸入教室代碼或連結"
+              required
+            />
+            <button class="enter_room__search_btn">進入</button>
+          </form>
+        </section>
       </section>
       <section class="pictures__frame">
         <img src="/image/online-education-1.png" class="pictures__1" />
