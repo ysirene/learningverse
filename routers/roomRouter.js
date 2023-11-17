@@ -6,15 +6,15 @@ router.get("/:roomId", (req, res) => {
 });
 
 global.io.on("connection", (socket) => {
-  socket.on("join-room", (roomId, userId) => {
-    console.log(roomId, userId);
+  socket.on("join-room", (roomId, userId, userName) => {
+    console.log(roomId + "中有新朋友！他的id是：" + userId);
 
     // 通知有新的使用者進房間
     socket.join(roomId); //讓socket進入房間
-    socket.broadcast.to(roomId).emit("user-connected", userId); //socket廣播通知
+    socket.broadcast.to(roomId).emit("user-connected", userId, userName); //socket廣播通知
 
     socket.on("disconnect", () => {
-      console.log(userId + "離開");
+      console.log(userId + "離開" + roomId);
       socket.broadcast.to(roomId).emit("user-disconnected", userId); //socket廣播通知
     });
   });

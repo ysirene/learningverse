@@ -5,11 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="/css/base.css" />
     <link rel="stylesheet" type="text/css" href="/css/room.css" />
+    <link rel="shortcut icon" href="/image/logo.png" />
     <title>Learningverse</title>
   </head>
   <body>
-    hhhhh
+    <main></main>
     <section class="video_container"></section>
+    <section class="taskbar">
+      <div class="taskbar__info">
+        <div id="taskbar__time">16:00</div>
+        <div>|</div>
+        <div id="taskbar__room_id"></div>
+      </div>
+      <div class="taskbar__main_function">
+        <button class="btn--microphone"></button>
+        <button class="btn--camera"></button>
+        <button class="btn--raise_hand"></button>
+        <button class="btn--shear_screen"></button>
+        <button class="btn--leave_room"></button>
+      </div>
+      <div class="taskbar__minor_function">
+        <button class="btn--info"></button>
+        <button class="btn--msg"></button>
+        <button class="btn--participant"></button>
+        <button class="btn--lottery"></button>
+      </div>
+    </section>
     <script src="/socket.io/socket.io.js" defer></script>
     <script
       src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"
