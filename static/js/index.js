@@ -1,8 +1,8 @@
 // 驗證登入狀態
 (function authenticateUser() {
   const signinBtnElem = document.querySelector("#nav__signinSignup");
-  if (localStorage.getItem("token")) {
-    let token = localStorage.getItem("token");
+  if (sessionStorage.getItem("token")) {
+    let token = sessionStorage.getItem("token");
     let src = "/api/user/auth";
     let options = {
       method: "GET",
