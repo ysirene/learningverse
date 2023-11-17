@@ -3,8 +3,8 @@ let signinStatus = false;
 // 驗證登入狀態
 function authenticateUser() {
   let memberBtnElem = document.querySelector("#member_btn");
-  if (localStorage.getItem("token")) {
-    let token = localStorage.getItem("token");
+  if (sessionStorage.getItem("token")) {
+    let token = sessionStorage.getItem("token");
     let src = "/api/user/auth";
     let options = {
       method: "GET",
@@ -177,7 +177,7 @@ function signin(event) {
         if (data.error) {
           renderSigninSignupErrorMsg("signin", data.message);
         } else {
-          localStorage.setItem("token", data.token);
+          sessionStorage.setItem("token", data.token);
           location.reload();
         }
       })
@@ -188,6 +188,6 @@ function signin(event) {
 }
 // 登出系統
 function signout() {
-  localStorage.clear("token");
+  sessionStorage.clear("token");
   location.reload();
 }
