@@ -5,6 +5,7 @@ let peers = {};
 let callList = [];
 let peer;
 let userInfo;
+let myStream;
 const videoContainerElem = document.querySelector(".video_container");
 
 // 在畫面左下顯示roomId
@@ -76,32 +77,25 @@ function registerPeer(userId, myName) {
     // 如果有人call我，就傳送我的視訊和音訊
     peer.on("call", (call) => {
       console.log("欸有人call我");
-      navigator.mediaDevices
-        .getUserMedia({
-          video: true,
-          audio: true,
-        })
-        .then((stream) => {
-          console.log("傳送我的畫面給其他使用者");
-          call.answer(stream);
-          // 把已經在會議室的其他人的視訊畫面加到我的HTML中
-          const video = document.createElement("video");
-          video.className = "user_container__video";
-          call.on("stream", (userVideoStream) => {
-            if (!callList[call.peer]) {
-              console.log(call.metadata.name);
-              console.log(call.metadata.id);
-              console.log("把已經在會議室的其他人的視訊畫面加到我的HTML中");
-              addVideoStream(
-                video,
-                userVideoStream,
-                call.metadata.name,
-                call.metadata.id
-              );
-              callList[call.peer] = call;
-            }
-          });
-        });
+      console.log("傳送我的畫面給其他使用者");
+      call.answer(myStream);
+      // 把已經在會議室的其他人的視訊畫面加到我的HTML中
+      const video = document.createElement("video");
+      video.className = "user_container__video";
+      call.on("stream", (userVideoStream) => {
+        if (!callList[call.peer]) {
+          console.log(call.metadata.name);
+          console.log(call.metadata.id);
+          console.log("把已經在會議室的其他人的視訊畫面加到我的HTML中");
+          addVideoStream(
+            video,
+            userVideoStream,
+            call.metadata.name,
+            call.metadata.id
+          );
+          callList[call.peer] = call;
+        }
+      });
     });
   });
 }
@@ -158,6 +152,7 @@ function getMediaPermission(myName, myId) {
         audio: true,
       })
       .then((stream) => {
+        myStream = stream;
         // 將自己的視訊畫面加到HTML中
         const myVideo = document.createElement("video");
         myVideo.className = "user_container__video";
@@ -181,8 +176,8 @@ function getMediaPermission(myName, myId) {
 (async function run() {
   try {
     await authenticateUser(); // 驗證會員
-    registerPeer(userInfo.id, userInfo.name); // 用會員id連線peer
     await getMediaPermission(userInfo.name, userInfo.id); // 取得視訊和音訊並放到畫面上
+    registerPeer(userInfo.id, userInfo.name); // 用會員id連線peer
   } catch (err) {
     console.log(err);
   }
@@ -197,4 +192,34 @@ socket.on("user-disconnected", (userId) => {
   }
 });
 
-// const cameraStopBtn = document.querySelector();
+// 暫停或開啟音訊
+const turnOffMicBtn = document.querySelector(".btn__microphone--on");
+const turnOnMicaBtn = document.querySelector(".btn__microphone--off");
+turnOffMicBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  turnOffMicBtn.classList.toggle("elem--hide");
+  turnOnMicaBtn.classList.toggle("elem--hide");
+  myStream.getAudioTracks()[0].enabled = false;
+});
+turnOnMicaBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  turnOffMicBtn.classList.toggle("elem--hide");
+  turnOnMicaBtn.classList.toggle("elem--hide");
+  myStream.getAudioTracks()[0].enabled = true;
+});
+
+// 暫停或開啟視訊畫面
+const turnOffCameraBtn = document.querySelector(".btn__camera--on");
+const turnOnCameraBtn = document.querySelector(".btn__camera--off");
+turnOffCameraBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  turnOffCameraBtn.classList.toggle("elem--hide");
+  turnOnCameraBtn.classList.toggle("elem--hide");
+  myStream.getVideoTracks()[0].enabled = false;
+});
+turnOnCameraBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  turnOffCameraBtn.classList.toggle("elem--hide");
+  turnOnCameraBtn.classList.toggle("elem--hide");
+  myStream.getVideoTracks()[0].enabled = true;
+});

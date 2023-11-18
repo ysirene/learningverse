@@ -48,7 +48,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 200px;
+  width: 150px;
   font-size: 16px;
   font-weight: 500;
   color: #fff;
@@ -90,30 +90,36 @@ body {
 .taskbar__main_function button:hover {
   background-color: #404e4d;
 }
-.btn--microphone {
+.btn__microphone--on {
   background-image: url(/image/microphone_light.png);
 }
-.btn--camera {
+.btn__microphone--off {
+  background-image: url(/image/microphone-slash-red.png);
+}
+.btn__camera--on {
   background-image: url(/image/webcam_light.png);
 }
-.btn--raise_hand {
+.btn__camera--off {
+  background-image: url(/image/webcam-slash-red.png);
+}
+.btn__raise_hand {
   background-image: url(/image/raise-hand.png);
 }
-.btn--shear_screen {
+.btn__shear_screen {
   background-image: url(/image/arrow-square-up-bold.png);
 }
-.btn--leave_room {
+.btn__leave_room {
   background-image: url(/image/phone-cross.png);
 }
-.btn--info {
+.btn__info {
   background-image: url(/image/info.png);
 }
-.btn--msg {
+.btn__msg {
   background-image: url(/image/message.png);
 }
-.btn--participant {
+.btn__participant {
   background-image: url(/image/users.png);
 }
-.btn--lottery {
+.btn__lottery {
   background-image: url(/image/dice.png);
 }
