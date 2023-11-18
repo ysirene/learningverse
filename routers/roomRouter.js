@@ -1,13 +1,15 @@
 const express = require("express");
 const router = express.Router();
 
+const io = require("socket.io")(global.server);
+
 router.get("/:roomId", (req, res) => {
   res.render("room");
 });
 
-global.io.on("connection", (socket) => {
+io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId, userName) => {
-    console.log(roomId + "中有新朋友！他的id是：" + userId);
+    console.log("有新朋友！", roomId, userId);
 
     // 通知有新的使用者進房間
     socket.join(roomId); //讓socket進入房間

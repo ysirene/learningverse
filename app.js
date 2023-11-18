@@ -1,9 +1,8 @@
 const express = require("express");
 const app = express();
 const server = require("http").Server(app);
-const io = require("socket.io")(server);
 
-global.io = io;
+global.server = server;
 
 const apiUserRouter = require("./routers/apiUser");
 const roomRouter = require("./routers/roomRouter");
