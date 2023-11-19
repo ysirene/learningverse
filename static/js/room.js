@@ -68,7 +68,7 @@ function authenticateUser() {
 function registerPeer(userId, myName) {
   peer = new Peer(userId, {
     host: "/",
-    port: "5002",
+    port: "9000",
   });
   peer.on("open", (userId) => {
     // 傳送join-room訊息server
