@@ -1,8 +1,7 @@
 const roomId = window.location.pathname.split("/")[2];
 const socket = io("/");
-let peers = {};
-// TODO:研究callList
-let callList = [];
+const peers = {};
+let cameraStatus = true;
 let peer;
 let userInfo;
 let myStream;
@@ -68,8 +67,7 @@ function authenticateUser() {
 function registerPeer(userId, myName) {
   peer = new Peer(userId, {
     host: "/",
-    port: "443",
-    secure: true,
+    port: "9000",
   });
   peer.on("open", (userId) => {
     // 傳送join-room訊息server
@@ -81,10 +79,12 @@ function registerPeer(userId, myName) {
       console.log("傳送我的畫面給其他使用者");
       call.answer(myStream);
       // 把已經在會議室的其他人的視訊畫面加到我的HTML中
-      const video = document.createElement("video");
-      video.className = "user_container__video";
       call.on("stream", (userVideoStream) => {
-        if (!callList[call.peer]) {
+        if (!peers[call.peer]) {
+          const video = document.createElement("video");
+          const videoId = "userVideo" + call.metadata.id;
+          video.className = "user_container__video";
+          video.setAttribute("id", videoId);
           console.log(call.metadata.name);
           console.log(call.metadata.id);
           console.log("把已經在會議室的其他人的視訊畫面加到我的HTML中");
@@ -92,56 +92,85 @@ function registerPeer(userId, myName) {
             video,
             userVideoStream,
             call.metadata.name,
-            call.metadata.id
+            call.metadata.id,
+            call.metadata.camera
           );
-          callList[call.peer] = call;
+          peers[call.peer] = call;
+          console.log(call.peer);
+          // 當對方離開時，要將video拿掉
+          call.on("close", () => {
+            const userContainerId = "userContainer" + call.peer;
+            const userContainerElem = document.getElementById(userContainerId);
+            userContainerElem.remove();
+            peers[call.peer] = false;
+          });
         }
       });
     });
   });
 }
 
+// 開啟或關閉視訊畫面的灰色遮罩
+function toggleVideoMask(userId) {
+  const videoMaskId = "videoMask" + userId;
+  const targetElem = document.getElementById(videoMaskId);
+  targetElem.classList.toggle("elem--hide");
+}
+
 // 將視訊和音訊加入HTML中
-function addVideoStream(video, stream, userName, userId) {
+function addVideoStream(video, stream, userName, userId, cameraStatus) {
   console.log("addVideoStream");
-  const userContainerId = "user" + userId;
+  const userContainerId = "userContainer" + userId;
   const userContainerDiv = document.createElement("div");
   const userNameDiv = document.createElement("div");
+  const videoMaskDiv = document.createElement("div");
+  const videoMaskId = "videoMask" + userId;
   userContainerDiv.className = "user_container";
   userContainerDiv.setAttribute("id", userContainerId);
   userNameDiv.className = "user_container__name";
   userNameDiv.textContent = userName;
+  videoMaskDiv.setAttribute("class", "user_container__mask elem--hide");
+  videoMaskDiv.setAttribute("id", videoMaskId);
   video.className = "user_container__video";
   video.srcObject = stream;
-  userContainerDiv.append(video, userNameDiv);
+  userContainerDiv.append(video, userNameDiv, videoMaskDiv);
   video.addEventListener("loadedmetadata", () => {
     console.log("videoEventListener");
     video.play();
     videoContainerElem.append(userContainerDiv);
+    if (!cameraStatus) {
+      console.log("他沒開鏡頭！" + userId);
+      toggleVideoMask(userId);
+    }
   });
 }
 
 function connectedToNewUser(userId, userName, stream, myId, myName) {
   // userId是對方的，這句的意思是我打給對方並將我的視訊和音訊傳遞過去
   console.log("我要打給", userId);
-  const options = { metadata: { name: myName, id: myId } };
+  const options = {
+    metadata: { name: myName, id: myId, camera: cameraStatus },
+  };
   const call = peer.call(userId, stream, options);
   const video = document.createElement("video");
   video.className = "user_container__video";
+  const videoId = "userVideo" + userId;
+  video.setAttribute("id", videoId);
   // 當對方回覆他的視訊和音訊給我時，我要將他的畫面加到我的HTML中
   call.on("stream", (userVideoStream) => {
-    if (!callList[call.peer]) {
+    if (!peers[call.peer]) {
       console.log("對方傳送他的視訊給我了，我要把它放上畫面");
-      addVideoStream(video, userVideoStream, userName, userId);
-      callList[call.peer] = call;
+      addVideoStream(video, userVideoStream, userName, userId, true);
+      peers[call.peer] = call;
     }
   });
   // 當對方離開時，我要將video刪掉
   call.on("close", () => {
-    video.remove();
+    const userContainerId = "userContainer" + call.peer;
+    const userContainerElem = document.getElementById(userContainerId);
+    userContainerElem.remove();
+    peers[call.peer] = false;
   });
-
-  peers[userId] = call;
 }
 
 // 取得視訊和音訊的許可
@@ -156,9 +185,11 @@ function getMediaPermission(myName, myId) {
         myStream = stream;
         // 將自己的視訊畫面加到HTML中
         const myVideo = document.createElement("video");
+        const myVideoId = "userVideo" + myId;
         myVideo.className = "user_container__video";
         myVideo.muted = true; //不要聽到自己的回音
-        addVideoStream(myVideo, stream, myName, myId);
+        myVideo.setAttribute("id", myVideoId);
+        addVideoStream(myVideo, stream, myName, myId, true);
         console.log("3");
 
         // 當我從伺服器端收到user-connected訊息時，我會取得對方的id，並將我的視訊和音訊傳給對方
@@ -184,15 +215,6 @@ function getMediaPermission(myName, myId) {
   }
 })();
 
-socket.on("user-disconnected", (userId) => {
-  if (peers[userId]) {
-    peers[userId].close();
-    const userContainerId = "user" + userId;
-    const userContainer = document.getElementById(userContainerId);
-    userContainer.remove();
-  }
-});
-
 // 暫停或開啟音訊
 const turnOffMicBtn = document.querySelector(".btn__microphone--on");
 const turnOnMicaBtn = document.querySelector(".btn__microphone--off");
@@ -212,15 +234,26 @@ turnOnMicaBtn.addEventListener("click", (event) => {
 // 暫停或開啟視訊畫面
 const turnOffCameraBtn = document.querySelector(".btn__camera--on");
 const turnOnCameraBtn = document.querySelector(".btn__camera--off");
+// 暫停
 turnOffCameraBtn.addEventListener("click", (event) => {
   event.preventDefault();
   turnOffCameraBtn.classList.toggle("elem--hide");
   turnOnCameraBtn.classList.toggle("elem--hide");
   myStream.getVideoTracks()[0].enabled = false;
+  cameraStatus = false;
+  socket.emit("camera-status-change", userInfo.id);
 });
+// 開啟
 turnOnCameraBtn.addEventListener("click", (event) => {
   event.preventDefault();
   turnOffCameraBtn.classList.toggle("elem--hide");
   turnOnCameraBtn.classList.toggle("elem--hide");
   myStream.getVideoTracks()[0].enabled = true;
+  cameraStatus = true;
+  socket.emit("camera-status-change", userInfo.id);
 });
+socket.on("toggle-video-mask", (userId) => {
+  toggleVideoMask(userId);
+});
+
+// 舉手或放下

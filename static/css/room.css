@@ -12,10 +12,12 @@ body {
   width: 1200px;
   box-sizing: border-box;
   padding: 16px 8px;
+  border-radius: 10px;
   display: flex;
   flex-wrap: wrap;
 }
 .user_container {
+  margin: 10px;
   position: relative;
   flex: 1 1 300px;
   border-radius: 5px;
@@ -24,6 +26,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 20;
   margin: 5px;
   color: #fff;
   font-size: 16px;
@@ -34,6 +37,15 @@ body {
   height: 100%;
   object-fit: cover;
   transform: scaleX(-1);
+  border-radius: 10px;
+}
+.user_container__mask {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background-color: #3c3c3c;
 }
 .taskbar {
   box-sizing: border-box;
@@ -104,6 +116,7 @@ body {
   background-image: url(/image/webcam-slash-red.png);
 }
 .btn__raise_hand {
+  border: #fff 2px solid;
   background-image: url(/image/raise-hand.png);
 }
 .btn__shear_screen {

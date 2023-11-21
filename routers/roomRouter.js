@@ -22,14 +22,20 @@ io.on("connection", (socket) => {
       console.log(userId + "離開" + previousRoomId);
     }
 
-    // 通知有新的使用者進房間
-    socket.join(roomId); //讓socket進入房間，可以接收到該房間的通知
+    //讓socket進入房間，可以接收到該房間的通知
+    socket.join(roomId);
     userInRooms[userId] = roomId;
-    socket.broadcast.to(roomId).emit("user-connected", userId, userName); //socket廣播通知
+
+    // 通知有新的使用者進房間
+    socket.to(roomId).emit("user-connected", userId, userName);
+
+    // 通知有人關閉鏡頭->顯示遮罩
+    socket.on("camera-status-change", (userId) => {
+      io.in(roomId).emit("toggle-video-mask", userId);
+    });
 
     socket.on("disconnect", () => {
       console.log(userId + "離開" + roomId);
-      socket.broadcast.to(roomId).emit("user-disconnected", userId); //socket廣播通知
       delete userInRooms[userId];
     });
   });
