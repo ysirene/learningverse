@@ -266,6 +266,7 @@ const toggleMsgPanelBtn = document.querySelector(".btn__msg");
 const msgPanelElem = document.querySelector("#right_panel__msg");
 const toggleParticipantPanelBtn = document.querySelector(".btn__participant");
 const participantPanelElem = document.querySelector("#right_panel_participant");
+
 // 顯示文字訊息框
 toggleMsgPanelBtn.addEventListener("click", (event) => {
   event.preventDefault();
@@ -278,7 +279,6 @@ toggleMsgPanelBtn.addEventListener("click", (event) => {
 });
 
 // 顯示參與者清單
-
 toggleParticipantPanelBtn.addEventListener("click", (event) => {
   event.preventDefault();
   if (showMsgPanel) {
@@ -287,4 +287,29 @@ toggleParticipantPanelBtn.addEventListener("click", (event) => {
   }
   participantPanelElem.classList.toggle("elem--hide");
   showParticipantPanel = !showParticipantPanel;
+});
+
+// 傳送文字訊息
+const sendMsgBtn = document.querySelector(".send_msg__btn");
+sendMsgBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  const sendMsgInput = document.querySelector(".send_msg__input").value;
+  const now = new Date();
+  const hour = now.getHours();
+  let minute = now.getMinutes();
+  minute = checkTime(minute);
+  const time = hour + ":" + minute;
+  socket.emit("send-msg", roomId, userInfo.name, time, sendMsgInput);
+  document.querySelector(".send_msg__input").value = "";
+});
+socket.on("receive-msg", (userName, time, msgText) => {
+  const msgContentElem = document.querySelector(".right_panel__msg_content");
+  const userNameSpan = document.createElement("span");
+  const timeSpan = document.createElement("span");
+  const msgTextDiv = document.createElement("div");
+  userNameSpan.textContent = userName;
+  timeSpan.setAttribute("class", "msg_content__time");
+  timeSpan.textContent = time;
+  msgTextDiv.textContent = msgText;
+  msgContentElem.append(userNameSpan, timeSpan, msgTextDiv);
 });

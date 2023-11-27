@@ -29,9 +29,14 @@ io.on("connection", (socket) => {
     // 通知有新的使用者進房間
     socket.to(roomId).emit("user-connected", userId, userName);
 
-    // 通知有人關閉鏡頭->顯示遮罩
+    // 鏡頭開關→顯示或隱藏遮罩
     socket.on("camera-status-change", (userId) => {
       io.in(roomId).emit("toggle-video-mask", userId);
+    });
+
+    // 接收與傳送文字訊息
+    socket.on("send-msg", (roomId, userName, time, msgText) => {
+      io.in(roomId).emit("receive-msg", userName, time, msgText);
     });
 
     socket.on("disconnect", () => {

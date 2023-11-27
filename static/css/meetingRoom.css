@@ -80,17 +80,21 @@ body {
   font-size: 20px;
   margin-bottom: 15px;
 }
-.right_panel__msgContent {
+.right_panel__msg_content {
   height: calc(100% - 98px);
   overflow-y: scroll;
 }
-.right_panel__msgContent div {
+.right_panel__msg_content div {
   padding-bottom: 10px;
 }
-.send_msg_form {
+.msg_content__time {
+  color: #404e4d;
+  margin-left: 10px;
+}
+.send_msg__form {
   position: relative;
 }
-.send_msg_input {
+.send_msg__input {
   height: 48px;
   width: calc(100% - 30px);
   margin: 0 auto;
@@ -99,7 +103,7 @@ body {
   border: none;
   background-color: rgb(244, 243, 243);
 }
-.send_msg_btn {
+.send_msg__btn {
   position: absolute;
   width: 48px;
   height: 48px;
@@ -108,10 +112,10 @@ body {
   border-radius: 50%;
   right: 0;
 }
-.send_msg_btn:hover {
+.send_msg__btn:hover {
   background-color: rgb(223, 222, 222);
 }
-.send_msg_icon {
+.send_msg__icon {
   width: 50%;
   height: 50%;
 }
