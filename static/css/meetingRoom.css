@@ -80,23 +80,56 @@ body {
   font-size: 20px;
   margin-bottom: 15px;
 }
-.right_panel__content {
-  height: calc(100% - 50px);
+.right_panel__msgContent {
+  height: calc(100% - 98px);
   overflow-y: scroll;
 }
-.right_panel__content div {
+.right_panel__msgContent div {
   padding-bottom: 10px;
+}
+.send_msg_form {
+  position: relative;
+}
+.send_msg_input {
+  height: 48px;
+  width: calc(100% - 30px);
+  margin: 0 auto;
+  padding: 0 15px;
+  border-radius: 50px;
+  border: none;
+  background-color: rgb(244, 243, 243);
+}
+.send_msg_btn {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
+  right: 0;
+}
+.send_msg_btn:hover {
+  background-color: rgb(223, 222, 222);
+}
+.send_msg_icon {
+  width: 50%;
+  height: 50%;
 }
 .right_panel__user_img {
   width: 32px;
   height: 32px;
   border-radius: 50%;
 }
-.content__participant {
+.right_panel__participantContent {
+  height: calc(100% - 50px);
+  overflow-y: scroll;
+}
+.participant__info {
   display: flex;
   align-items: center;
+  padding-bottom: 10px;
 }
-.content__participant span {
+.participant__info span {
   padding-left: 10px;
 }
 .taskbar {
