@@ -4,13 +4,44 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="/css/base.css" />
-    <link rel="stylesheet" type="text/css" href="/css/room.css" />
+    <link rel="stylesheet" type="text/css" href="/css/meetingRoom.css" />
     <link rel="shortcut icon" href="/image/logo.png" />
     <title>Learningverse</title>
   </head>
   <body>
     <main></main>
-    <section class="video_container"></section>
+    <section class="upper_space">
+      <!-- 視訊畫面 -->
+      <div class="video_container"></div>
+      <!-- 右側文字訊息 -->
+      <div class="right_panel elem--hide" id="right_panel__msg">
+        <div class="right_panel__title">教室內的訊息</div>
+        <div class="right_panel__content right_panel__scrollbar">
+          <span>你</span> <span style="color: #404e4d">21:23</span>
+          <div>我好你好大家好</div>
+        </div>
+      </div>
+      <!-- 右側參加者名單 -->
+      <div class="right_panel elem--hide" id="right_panel_participant">
+        <div class="right_panel__title">參與者</div>
+        <div class="right_panel__content right_panel__scrollbar">
+          <div class="content__participant">
+            <img
+              class="right_panel__user_img"
+              src="https://picsum.photos/200"
+            />
+            <span>李亞珊</span>
+          </div>
+          <div class="content__participant">
+            <img
+              class="right_panel__user_img"
+              src="https://picsum.photos/200"
+            />
+            <span>李亞珊</span>
+          </div>
+        </div>
+      </div>
+    </section>
     <section class="taskbar">
       <div class="taskbar__info">
         <div id="taskbar__time" class="info__item">16:00</div>
@@ -39,6 +70,7 @@
       defer
     ></script>
     <script type="text/javascript" src="/js/ajax.js" defer></script>
-    <script type="text/javascript" src="/js/room.js" defer></script>
+    <script type="text/javascript" src="/js/meetingRoom.js" defer></script>
+    <script type="text/javascript" src="/js/prepareRoom.js" defer></script>
   </body>
 </html>

@@ -1,7 +1,9 @@
 const roomId = window.location.pathname.split("/")[2];
 const socket = io("/");
-const peers = {};
+const peers = [];
 let cameraStatus = true;
+let showMsgPanel = false;
+let showParticipantPanel = false;
 let peer;
 let userInfo;
 let myStream;
@@ -208,6 +210,7 @@ function getMediaPermission(myName, myId) {
 (async function run() {
   try {
     await authenticateUser(); // 驗證會員
+    // renderRoomPage();
     await getMediaPermission(userInfo.name, userInfo.id); // 取得視訊和音訊並放到畫面上
     registerPeer(userInfo.id, userInfo.name); // 用會員id連線peer
   } catch (err) {
@@ -257,3 +260,31 @@ socket.on("toggle-video-mask", (userId) => {
 });
 
 // 舉手或放下
+
+// 右側面板
+const toggleMsgPanelBtn = document.querySelector(".btn__msg");
+const msgPanelElem = document.querySelector("#right_panel__msg");
+const toggleParticipantPanelBtn = document.querySelector(".btn__participant");
+const participantPanelElem = document.querySelector("#right_panel_participant");
+// 顯示文字訊息框
+toggleMsgPanelBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  if (showParticipantPanel) {
+    participantPanelElem.classList.toggle("elem--hide");
+    showParticipantPanel = false;
+  }
+  msgPanelElem.classList.toggle("elem--hide");
+  showMsgPanel = !showMsgPanel;
+});
+
+// 顯示參與者清單
+
+toggleParticipantPanelBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  if (showMsgPanel) {
+    msgPanelElem.classList.toggle("elem--hide");
+    showMsgPanel = false;
+  }
+  participantPanelElem.classList.toggle("elem--hide");
+  showParticipantPanel = !showParticipantPanel;
+});
