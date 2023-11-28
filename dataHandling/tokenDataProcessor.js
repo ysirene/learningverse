@@ -8,6 +8,7 @@ function encodeToken(data) {
     name: data.name,
     email: data.email,
     role: data.role_type,
+    img: data.image_name,
   };
   const registeredClaims = { algorithm: "HS256", expiresIn: "7d" };
   const encodedToken = jwt.sign(privateClaims, secretKey, registeredClaims);

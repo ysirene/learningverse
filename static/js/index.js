@@ -14,6 +14,10 @@
       .then((data) => {
         if (data.data != null) {
           const usernameElem = document.querySelector("#nav__username");
+          const userImgElem = document.querySelector("#nav__user_img");
+          const userImgBtn = document.querySelector(".nav__user_img");
+          const userImgUrl =
+            "https://d277hbzet0a7g8.cloudfront.net/userImage/" + data.data.img;
           const sloganBtnElem = document.querySelector(".slogan__signin_btn");
           const enterRoomElem = document.querySelector(".enter_room");
           const roleTranslate = {
@@ -23,6 +27,8 @@
           usernameElem.textContent =
             data.data.name + " " + roleTranslate[data.data.role];
           usernameElem.classList.remove("elem--hide");
+          userImgElem.setAttribute("src", userImgUrl);
+          userImgBtn.classList.remove("elem--hide");
           if (data.data.role == "student") {
             const createRoomBtn = document.querySelector(
               ".enter_room__create_btn"
