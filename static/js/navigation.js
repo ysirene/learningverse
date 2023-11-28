@@ -7,7 +7,7 @@ function translateDay(num) {
     4: "週四",
     5: "週五",
     6: "週六",
-    7: "週日",
+    0: "週日",
   };
   return dayDic[num];
 }
@@ -24,7 +24,7 @@ function checkTime(num) {
 function startTime() {
   let today = new Date();
   let month = today.getMonth() + 1;
-  let weekday = today.getDay() + 1;
+  let weekday = today.getDay();
   let date = today.getDate();
   let hour = today.getHours();
   let minute = today.getMinutes();
