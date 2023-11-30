@@ -6,7 +6,6 @@ let showMsgPanel = false;
 let showParticipantPanel = false;
 // let handsUp = false;
 let peer;
-const videoContainerElem = document.querySelector(".video_container");
 
 // 渲染meetingRoom畫面
 function renderRoomPage() {
@@ -40,8 +39,14 @@ function renderRoomPage() {
   rightPanelMsgSubmitBtn.setAttribute("class", "send_msg__btn");
   rightPanelMsgSubmitBtn.addEventListener("click", (event) => {
     event.preventDefault();
-    // TODO:這裡！！！
-    console.log("傳送訊息還沒做");
+    const sendMsgInput = document.querySelector(".send_msg__input").value;
+    const now = new Date();
+    const hour = now.getHours();
+    let minute = now.getMinutes();
+    minute = checkTime(minute);
+    const time = hour + ":" + minute;
+    socket.emit("send-msg", roomId, userInfo.name, time, sendMsgInput);
+    document.querySelector(".send_msg__input").value = "";
   });
   const rightPanelMsgSubmitIcon = document.createElement("img");
   rightPanelMsgSubmitIcon.setAttribute("class", "send_msg__icon");
@@ -96,9 +101,29 @@ function renderRoomPage() {
   // 關閉麥克風(紫色按鈕)
   const taskbarMainFunctionMicOffBtn = document.createElement("button");
   taskbarMainFunctionMicOffBtn.setAttribute("class", "btn__microphone--on");
+  taskbarMainFunctionMicOffBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    const turnOffMicBtn = document.querySelector(".btn__microphone--on");
+    const turnOnMicaBtn = document.querySelector(".btn__microphone--off");
+    turnOffMicBtn.classList.toggle("elem--hide");
+    turnOnMicaBtn.classList.toggle("elem--hide");
+    myStream.getAudioTracks()[0].enabled = false;
+    myMicrophoneStatus = false;
+  });
+
   // 開啟麥克風(紅色按鈕)
   const taskbarMainFunctionMicOnBtn = document.createElement("button");
   taskbarMainFunctionMicOnBtn.setAttribute("class", "btn__microphone--off");
+  taskbarMainFunctionMicOnBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    const turnOffMicBtn = document.querySelector(".btn__microphone--on");
+    const turnOnMicaBtn = document.querySelector(".btn__microphone--off");
+    turnOffMicBtn.classList.toggle("elem--hide");
+    turnOnMicaBtn.classList.toggle("elem--hide");
+    myStream.getAudioTracks()[0].enabled = true;
+    myMicrophoneStatus = true;
+  });
+
   if (myMicrophoneStatus == true) {
     taskbarMainFunctionMicOnBtn.classList.add("elem--hide");
   } else {
@@ -107,9 +132,31 @@ function renderRoomPage() {
   // 關閉視訊(紫色按鈕)
   const taskbarMainFunctionCameraOffBtn = document.createElement("button");
   taskbarMainFunctionCameraOffBtn.setAttribute("class", "btn__camera--on");
+  taskbarMainFunctionCameraOffBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    const turnOffCameraBtn = document.querySelector(".btn__camera--on");
+    const turnOnCameraBtn = document.querySelector(".btn__camera--off");
+    turnOffCameraBtn.classList.toggle("elem--hide");
+    turnOnCameraBtn.classList.toggle("elem--hide");
+    myStream.getVideoTracks()[0].enabled = false;
+    myCameraStatus = false;
+    socket.emit("camera-status-change", userInfo.id);
+  });
+
   // 開啟視訊(紅色按鈕)
   const taskbarMainFunctionCameraOnBtn = document.createElement("button");
   taskbarMainFunctionCameraOnBtn.setAttribute("class", "btn__camera--off");
+  taskbarMainFunctionCameraOnBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    const turnOffCameraBtn = document.querySelector(".btn__camera--on");
+    const turnOnCameraBtn = document.querySelector(".btn__camera--off");
+    turnOffCameraBtn.classList.toggle("elem--hide");
+    turnOnCameraBtn.classList.toggle("elem--hide");
+    myStream.getVideoTracks()[0].enabled = true;
+    myCameraStatus = true;
+    socket.emit("camera-status-change", userInfo.id);
+  });
+
   if (myCameraStatus == true) {
     taskbarMainFunctionCameraOnBtn.classList.add("elem--hide");
   } else {
@@ -135,8 +182,34 @@ function renderRoomPage() {
   taskbarMinorFunctionDiv.setAttribute("class", "taskbar__minor_function");
   const taskbarMinorFunctionMsgBtn = document.createElement("button");
   taskbarMinorFunctionMsgBtn.setAttribute("class", "btn__msg");
+  taskbarMinorFunctionMsgBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    const participantPanelElem = document.querySelector(
+      "#right_panel_participant"
+    );
+    const msgPanelElem = document.querySelector("#right_panel__msg");
+    if (showParticipantPanel) {
+      participantPanelElem.classList.toggle("elem--hide");
+      showParticipantPanel = false;
+    }
+    msgPanelElem.classList.toggle("elem--hide");
+    showMsgPanel = !showMsgPanel;
+  });
   const taskbarMinorFunctionParticipantBtn = document.createElement("button");
   taskbarMinorFunctionParticipantBtn.setAttribute("class", "btn__participant");
+  taskbarMinorFunctionParticipantBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    const participantPanelElem = document.querySelector(
+      "#right_panel_participant"
+    );
+    const msgPanelElem = document.querySelector("#right_panel__msg");
+    if (showMsgPanel) {
+      msgPanelElem.classList.toggle("elem--hide");
+      showMsgPanel = false;
+    }
+    participantPanelElem.classList.toggle("elem--hide");
+    showParticipantPanel = !showParticipantPanel;
+  });
   const taskbarMinorFunctionLotteryBtn = document.createElement("button");
   taskbarMinorFunctionLotteryBtn.setAttribute("class", "btn__lottery");
   taskbarMinorFunctionDiv.append(
@@ -166,8 +239,10 @@ enterMeetingRoomBtn.addEventListener("click", (event) => {
   const prepareRoomCssLink = document.getElementsByTagName("link")[3];
   prepareRoomCssLink.setAttribute("href", "/css/meetingRoom.css");
   renderRoomPage();
+  addMyVideoStream(myStream, userInfo.name, userInfo.id, myCameraStatus);
   renderRoomId();
   startTime();
+  registerPeer(userInfo.id, userInfo.name);
 });
 
 // 在畫面左下顯示roomId
@@ -194,37 +269,36 @@ function startTime() {
   timeElem.textContent = hour + ":" + minute;
   setTimeout(startTime, 1000);
 }
-// document.addEventListener("DOMContentLoaded", startTime());
 
-// 驗證登入狀態
-function authenticateUser() {
-  return new Promise((resolve, reject) => {
-    if (sessionStorage.getItem("token")) {
-      let token = sessionStorage.getItem("token");
-      let src = "/api/user/auth";
-      let options = {
-        method: "GET",
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      };
-      ajax(src, options)
-        .then((data) => {
-          if (data.data != null) {
-            resolve();
-          } else {
-            window.location.href = "/";
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          reject(error);
-        });
-    } else {
-      window.location.href = "/";
-    }
-  });
-}
+// // 驗證登入狀態
+// function authenticateUser() {
+//   return new Promise((resolve, reject) => {
+//     if (sessionStorage.getItem("token")) {
+//       let token = sessionStorage.getItem("token");
+//       let src = "/api/user/auth";
+//       let options = {
+//         method: "GET",
+//         headers: {
+//           authorization: `Bearer ${token}`,
+//         },
+//       };
+//       ajax(src, options)
+//         .then((data) => {
+//           if (data.data != null) {
+//             resolve();
+//           } else {
+//             window.location.href = "/";
+//           }
+//         })
+//         .catch((error) => {
+//           console.log(error);
+//           reject(error);
+//         });
+//     } else {
+//       window.location.href = "/";
+//     }
+//   });
+// }
 
 function registerPeer(userId, myName) {
   peer = new Peer(userId, {
@@ -233,7 +307,7 @@ function registerPeer(userId, myName) {
   });
   peer.on("open", (userId) => {
     // 傳送join-room訊息server
-    socket.emit("join-room", roomId, userId, myName);
+    socket.emit("join-room", roomId, userId, myName, myCameraStatus);
 
     // 如果有人call我，就傳送我的視訊和音訊
     peer.on("call", (call) => {
@@ -243,15 +317,8 @@ function registerPeer(userId, myName) {
       // 把已經在會議室的其他人的視訊畫面加到我的HTML中
       call.on("stream", (userVideoStream) => {
         if (!peers[call.peer]) {
-          const video = document.createElement("video");
-          const videoId = "userVideo" + call.metadata.id;
-          video.className = "user_container__video";
-          video.setAttribute("id", videoId);
-          console.log(call.metadata.name);
-          console.log(call.metadata.id);
           console.log("把已經在會議室的其他人的視訊畫面加到我的HTML中");
           addVideoStream(
-            video,
             userVideoStream,
             call.metadata.name,
             call.metadata.id,
@@ -280,8 +347,12 @@ function toggleVideoMask(userId) {
 }
 
 // 將視訊和音訊加入HTML中
-function addVideoStream(video, stream, userName, userId, cameraStatus) {
+function addVideoStream(stream, userName, userId, cameraStatus) {
   console.log("addVideoStream");
+  const video = document.createElement("video");
+  const videoId = "userVideo" + userId;
+  video.className = "user_container__video";
+  video.setAttribute("id", videoId);
   const userContainerId = "userContainer" + userId;
   const userContainerDiv = document.createElement("div");
   const userNameDiv = document.createElement("div");
@@ -299,30 +370,67 @@ function addVideoStream(video, stream, userName, userId, cameraStatus) {
   video.addEventListener("loadedmetadata", () => {
     console.log("videoEventListener");
     video.play();
+    const videoContainerElem = document.querySelector(".video_container");
     videoContainerElem.append(userContainerDiv);
     if (!cameraStatus) {
+      console.log(cameraStatus);
       console.log("他沒開鏡頭！" + userId);
       toggleVideoMask(userId);
     }
   });
 }
 
-function connectedToNewUser(userId, userName, stream, myId, myName) {
+function addMyVideoStream(myStream, myName, myId, cameraStatus) {
+  const myVideo = document.createElement("video");
+  const myVideoId = "userVideo" + myId;
+  myVideo.className = "user_container__video";
+  myVideo.muted = true; //不要聽到自己的回音
+  myVideo.setAttribute("id", myVideoId);
+  const myContainerDiv = document.createElement("div");
+  const myNameDiv = document.createElement("div");
+  const myVideoMaskDiv = document.createElement("div");
+  const myContainerId = "userContainer" + myId;
+  const myVideoMaskId = "videoMask" + myId;
+  myContainerDiv.className = "user_container";
+  myContainerDiv.setAttribute("id", myContainerId);
+  myNameDiv.className = "user_container__name";
+  myNameDiv.textContent = myName;
+  myVideoMaskDiv.setAttribute("class", "user_container__mask elem--hide");
+  myVideoMaskDiv.setAttribute("id", myVideoMaskId);
+  myVideo.className = "user_container__video";
+  myVideo.srcObject = myStream;
+  myContainerDiv.append(myVideo, myNameDiv, myVideoMaskDiv);
+  myVideo.addEventListener("loadedmetadata", () => {
+    console.log("videoEventListener");
+    myVideo.play();
+    const videoContainerElem = document.querySelector(".video_container");
+    videoContainerElem.append(myContainerDiv);
+    if (!cameraStatus) {
+      console.log("我沒開鏡頭！" + myId);
+      toggleVideoMask(myId);
+    }
+  });
+}
+
+function connectedToNewUser(
+  userId,
+  userName,
+  mystream,
+  myId,
+  myName,
+  cameraStatus
+) {
   // userId是對方的，這句的意思是我打給對方並將我的視訊和音訊傳遞過去
   console.log("我要打給", userId);
   const options = {
-    metadata: { name: myName, id: myId, camera: cameraStatus },
+    metadata: { name: myName, id: myId, camera: myCameraStatus },
   };
-  const call = peer.call(userId, stream, options);
-  const video = document.createElement("video");
-  video.className = "user_container__video";
-  const videoId = "userVideo" + userId;
-  video.setAttribute("id", videoId);
+  const call = peer.call(userId, mystream, options);
   // 當對方回覆他的視訊和音訊給我時，我要將他的畫面加到我的HTML中
   call.on("stream", (userVideoStream) => {
     if (!peers[call.peer]) {
       console.log("對方傳送他的視訊給我了，我要把它放上畫面");
-      addVideoStream(video, userVideoStream, userName, userId, true);
+      addVideoStream(userVideoStream, userName, userId, cameraStatus);
       peers[call.peer] = call;
     }
   });
@@ -335,86 +443,18 @@ function connectedToNewUser(userId, userName, stream, myId, myName) {
   });
 }
 
-// 取得視訊和音訊的許可
-function getMediaPermission(myName, myId) {
-  return new Promise((resolve, reject) => {
-    navigator.mediaDevices
-      .getUserMedia({
-        video: true,
-        audio: true,
-      })
-      .then((stream) => {
-        // myStream = stream;
-        // 將自己的視訊畫面加到HTML中
-        const myVideo = document.createElement("video");
-        const myVideoId = "userVideo" + myId;
-        myVideo.className = "user_container__video";
-        myVideo.muted = true; //不要聽到自己的回音
-        myVideo.setAttribute("id", myVideoId);
-        addVideoStream(myVideo, stream, myName, myId, true);
-        console.log("3");
-
-        // 當我從伺服器端收到user-connected訊息時，我會取得對方的id，並將我的視訊和音訊傳給對方
-        socket.on("user-connected", (userId, userName) => {
-          connectedToNewUser(userId, userName, stream, myId, myName);
-        });
-        resolve();
-      })
-      .catch((err) => {
-        console.log(err);
-        reject(err);
-      });
-  });
-}
-
-// (async function run() {
-//   try {
-//     await authenticateUser(); // 驗證會員
-//     // renderRoomPage();
-//     await getMediaPermission(userInfo.name, userInfo.id); // 取得視訊和音訊並放到畫面上
-//     registerPeer(userInfo.id, userInfo.name); // 用會員id連線peer
-//   } catch (err) {
-//     console.log(err);
-//   }
-// })();
-
-// 暫停或開啟音訊
-// const turnOffMicBtn = document.querySelector(".btn__microphone--on");
-// const turnOnMicaBtn = document.querySelector(".btn__microphone--off");
-// turnOffMicBtn.addEventListener("click", (event) => {
-//   event.preventDefault();
-//   turnOffMicBtn.classList.toggle("elem--hide");
-//   turnOnMicaBtn.classList.toggle("elem--hide");
-//   myStream.getAudioTracks()[0].enabled = false;
-// });
-// turnOnMicaBtn.addEventListener("click", (event) => {
-//   event.preventDefault();
-//   turnOffMicBtn.classList.toggle("elem--hide");
-//   turnOnMicaBtn.classList.toggle("elem--hide");
-//   myStream.getAudioTracks()[0].enabled = true;
-// });
-
-// // 暫停或開啟視訊畫面
-// const turnOffCameraBtn = document.querySelector(".btn__camera--on");
-// const turnOnCameraBtn = document.querySelector(".btn__camera--off");
-// // 暫停
-// turnOffCameraBtn.addEventListener("click", (event) => {
-//   event.preventDefault();
-//   turnOffCameraBtn.classList.toggle("elem--hide");
-//   turnOnCameraBtn.classList.toggle("elem--hide");
-//   myStream.getVideoTracks()[0].enabled = false;
-//   cameraStatus = false;
-//   socket.emit("camera-status-change", userInfo.id);
-// });
-// // 開啟
-// turnOnCameraBtn.addEventListener("click", (event) => {
-//   event.preventDefault();
-//   turnOffCameraBtn.classList.toggle("elem--hide");
-//   turnOnCameraBtn.classList.toggle("elem--hide");
-//   myStream.getVideoTracks()[0].enabled = true;
-//   cameraStatus = true;
-//   socket.emit("camera-status-change", userInfo.id);
-// });
+// 有人加入會議室時要取得peer連線
+socket.on("user-connected", (userId, userName, cameraStatus) => {
+  connectedToNewUser(
+    userId,
+    userName,
+    myStream,
+    userInfo.id,
+    userInfo.name,
+    cameraStatus
+  );
+});
+// 有人關鏡頭
 socket.on("toggle-video-mask", (userId) => {
   toggleVideoMask(userId);
 });
@@ -431,47 +471,19 @@ socket.on("toggle-video-mask", (userId) => {
 // });
 // socket.on("hands-up_broadcast", (userId) => {});
 
-// 右側面板
-const toggleMsgPanelBtn = document.querySelector(".btn__msg");
-const msgPanelElem = document.querySelector("#right_panel__msg");
-const toggleParticipantPanelBtn = document.querySelector(".btn__participant");
-const participantPanelElem = document.querySelector("#right_panel_participant");
-
-// 顯示文字訊息框
-toggleMsgPanelBtn.addEventListener("click", (event) => {
-  event.preventDefault();
-  if (showParticipantPanel) {
-    participantPanelElem.classList.toggle("elem--hide");
-    showParticipantPanel = false;
-  }
-  msgPanelElem.classList.toggle("elem--hide");
-  showMsgPanel = !showMsgPanel;
-});
-
-// 顯示參與者清單
-toggleParticipantPanelBtn.addEventListener("click", (event) => {
-  event.preventDefault();
-  if (showMsgPanel) {
-    msgPanelElem.classList.toggle("elem--hide");
-    showMsgPanel = false;
-  }
-  participantPanelElem.classList.toggle("elem--hide");
-  showParticipantPanel = !showParticipantPanel;
-});
-
 // 傳送文字訊息
-const sendMsgBtn = document.querySelector(".send_msg__btn");
-sendMsgBtn.addEventListener("click", (event) => {
-  event.preventDefault();
-  const sendMsgInput = document.querySelector(".send_msg__input").value;
-  const now = new Date();
-  const hour = now.getHours();
-  let minute = now.getMinutes();
-  minute = checkTime(minute);
-  const time = hour + ":" + minute;
-  socket.emit("send-msg", roomId, userInfo.name, time, sendMsgInput);
-  document.querySelector(".send_msg__input").value = "";
-});
+// const sendMsgBtn = document.querySelector(".send_msg__btn");
+// sendMsgBtn.addEventListener("click", (event) => {
+//   event.preventDefault();
+//   const sendMsgInput = document.querySelector(".send_msg__input").value;
+//   const now = new Date();
+//   const hour = now.getHours();
+//   let minute = now.getMinutes();
+//   minute = checkTime(minute);
+//   const time = hour + ":" + minute;
+//   socket.emit("send-msg", roomId, userInfo.name, time, sendMsgInput);
+//   document.querySelector(".send_msg__input").value = "";
+// });
 socket.on("receive-msg", (userName, time, msgText) => {
   const msgContentElem = document.querySelector(".right_panel__msg_content");
   const userNameSpan = document.createElement("span");
