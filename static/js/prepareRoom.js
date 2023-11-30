@@ -1,4 +1,3 @@
-const mainElem = document.getElementsByTagName("main")[0];
 let myStream;
 let myCameraStatus = true;
 let myMicrophoneStatus = true;
