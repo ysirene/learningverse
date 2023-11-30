@@ -11,7 +11,7 @@ router.get("/:roomId", (req, res) => {
 const userInRooms = {}; //用於追蹤使用者所在的room
 
 io.on("connection", (socket) => {
-  socket.on("join-room", (roomId, userId, userName, cameraStatus) => {
+  socket.on("join-room", (roomId, userId, userName, userImg, cameraStatus) => {
     console.log("有新朋友！", roomId, userId);
 
     // 離開之前的房間
@@ -27,7 +27,9 @@ io.on("connection", (socket) => {
     userInRooms[userId] = roomId;
 
     // 通知有新的使用者進房間
-    socket.to(roomId).emit("user-connected", userId, userName, cameraStatus);
+    socket
+      .to(roomId)
+      .emit("user-connected", userId, userName, userImg, cameraStatus);
 
     // 鏡頭開關→顯示或隱藏遮罩
     socket.on("camera-status-change", (userId) => {

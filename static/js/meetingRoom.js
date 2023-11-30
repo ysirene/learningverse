@@ -7,6 +7,26 @@ let showParticipantPanel = false;
 // let handsUp = false;
 let peer;
 
+// 從prepareRoom切換到meetingRoom
+const enterMeetingRoomBtn = document.querySelector(".confirm__btn");
+enterMeetingRoomBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  // 清除prepareRoom的HTML
+  while (mainElem.firstChild) {
+    mainElem.removeChild(mainElem.lastChild);
+  }
+  // 將prepareRoom.css改成meetingRoom.css
+  const prepareRoomCssLink = document.getElementsByTagName("link")[3];
+  prepareRoomCssLink.setAttribute("href", "/css/meetingRoom.css");
+  // 渲染meetingRoom前端切版
+  renderRoomPage();
+  addMyVideoStream(myStream, userInfo.name, userInfo.id, myCameraStatus);
+  addToParticipantLst(userInfo.name, userInfo.id, userInfo.img);
+  renderRoomId();
+  startTime();
+  registerPeer(userInfo.id, userInfo.name, userInfo.img);
+});
+
 // 渲染meetingRoom畫面
 function renderRoomPage() {
   // 上方區塊
@@ -168,6 +188,10 @@ function renderRoomPage() {
   taskbarMainFunctionShareScreenBtn.setAttribute("class", "btn__shear_screen");
   const taskbarMainFunctionLeaveBtn = document.createElement("button");
   taskbarMainFunctionLeaveBtn.setAttribute("class", "btn__leave_room");
+  taskbarMainFunctionLeaveBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    window.location.href = "/";
+  });
   taskbarMainFunctionDiv.append(
     taskbarMainFunctionMicOnBtn,
     taskbarMainFunctionMicOffBtn,
@@ -227,24 +251,6 @@ function renderRoomPage() {
   mainElem.append(upperSpaceSection, taskbarSection);
 }
 
-// 從prepareRoom切換到meetingRoom
-const enterMeetingRoomBtn = document.querySelector(".confirm__btn");
-enterMeetingRoomBtn.addEventListener("click", (event) => {
-  event.preventDefault();
-  // 清除prepareRoom的HTML
-  while (mainElem.firstChild) {
-    mainElem.removeChild(mainElem.lastChild);
-  }
-  // 將prepareRoom.css改成meetingRoom.css
-  const prepareRoomCssLink = document.getElementsByTagName("link")[3];
-  prepareRoomCssLink.setAttribute("href", "/css/meetingRoom.css");
-  renderRoomPage();
-  addMyVideoStream(myStream, userInfo.name, userInfo.id, myCameraStatus);
-  renderRoomId();
-  startTime();
-  registerPeer(userInfo.id, userInfo.name);
-});
-
 // 在畫面左下顯示roomId
 function renderRoomId() {
   const roomIdElem = document.querySelector("#taskbar__room_id");
@@ -270,44 +276,14 @@ function startTime() {
   setTimeout(startTime, 1000);
 }
 
-// // 驗證登入狀態
-// function authenticateUser() {
-//   return new Promise((resolve, reject) => {
-//     if (sessionStorage.getItem("token")) {
-//       let token = sessionStorage.getItem("token");
-//       let src = "/api/user/auth";
-//       let options = {
-//         method: "GET",
-//         headers: {
-//           authorization: `Bearer ${token}`,
-//         },
-//       };
-//       ajax(src, options)
-//         .then((data) => {
-//           if (data.data != null) {
-//             resolve();
-//           } else {
-//             window.location.href = "/";
-//           }
-//         })
-//         .catch((error) => {
-//           console.log(error);
-//           reject(error);
-//         });
-//     } else {
-//       window.location.href = "/";
-//     }
-//   });
-// }
-
-function registerPeer(userId, myName) {
+function registerPeer(userId, myName, myImg) {
   peer = new Peer(userId, {
     host: "/",
     port: "9000",
   });
   peer.on("open", (userId) => {
     // 傳送join-room訊息server
-    socket.emit("join-room", roomId, userId, myName, myCameraStatus);
+    socket.emit("join-room", roomId, userId, myName, myImg, myCameraStatus);
 
     // 如果有人call我，就傳送我的視訊和音訊
     peer.on("call", (call) => {
@@ -324,13 +300,22 @@ function registerPeer(userId, myName) {
             call.metadata.id,
             call.metadata.camera
           );
+          addToParticipantLst(
+            call.metadata.name,
+            call.metadata.id,
+            call.metadata.img
+          );
           peers[call.peer] = call;
           console.log(call.peer);
-          // 當對方離開時，要將video拿掉
+          // 當對方離開時，我要將他從視訊畫面和參與者名單中刪掉
           call.on("close", () => {
             const userContainerId = "userContainer" + call.peer;
             const userContainerElem = document.getElementById(userContainerId);
             userContainerElem.remove();
+            const participantInfoId = "participantInfo" + call.peer;
+            const participantInfoElem =
+              document.getElementById(participantInfoId);
+            participantInfoElem.remove();
             peers[call.peer] = false;
           });
         }
@@ -380,6 +365,7 @@ function addVideoStream(stream, userName, userId, cameraStatus) {
   });
 }
 
+// 加上我的視訊畫面
 function addMyVideoStream(myStream, myName, myId, cameraStatus) {
   const myVideo = document.createElement("video");
   const myVideoId = "userVideo" + myId;
@@ -412,18 +398,39 @@ function addMyVideoStream(myStream, myName, myId, cameraStatus) {
   });
 }
 
+// 加入參與者清單
+function addToParticipantLst(name, id, img) {
+  const participantInfoDiv = document.createElement("div");
+  participantInfoDiv.setAttribute("class", "participant__info");
+  const participantInfoDivId = "participantInfo" + id;
+  participantInfoDiv.setAttribute("id", participantInfoDivId);
+  const userImg = document.createElement("img");
+  userImg.setAttribute("class", "right_panel__user_img");
+  const userImgSrc = "https://d277hbzet0a7g8.cloudfront.net/userImage/" + img;
+  userImg.setAttribute("src", userImgSrc);
+  const usernameSpan = document.createElement("span");
+  usernameSpan.textContent = name;
+  participantInfoDiv.append(userImg, usernameSpan);
+  const rightPanelParticipantContentElem = document.querySelector(
+    ".right_panel__participantContent"
+  );
+  rightPanelParticipantContentElem.append(participantInfoDiv);
+}
+
 function connectedToNewUser(
   userId,
   userName,
+  userImg,
   mystream,
   myId,
   myName,
+  myImg,
   cameraStatus
 ) {
   // userId是對方的，這句的意思是我打給對方並將我的視訊和音訊傳遞過去
   console.log("我要打給", userId);
   const options = {
-    metadata: { name: myName, id: myId, camera: myCameraStatus },
+    metadata: { name: myName, id: myId, img: myImg, camera: myCameraStatus },
   };
   const call = peer.call(userId, mystream, options);
   // 當對方回覆他的視訊和音訊給我時，我要將他的畫面加到我的HTML中
@@ -431,26 +438,32 @@ function connectedToNewUser(
     if (!peers[call.peer]) {
       console.log("對方傳送他的視訊給我了，我要把它放上畫面");
       addVideoStream(userVideoStream, userName, userId, cameraStatus);
+      addToParticipantLst(userName, userId, userImg);
       peers[call.peer] = call;
     }
   });
-  // 當對方離開時，我要將video刪掉
+  // 當對方離開時，我要將他從視訊畫面和參與者名單中刪掉
   call.on("close", () => {
     const userContainerId = "userContainer" + call.peer;
     const userContainerElem = document.getElementById(userContainerId);
     userContainerElem.remove();
+    const participantInfoId = "participantInfo" + call.peer;
+    const participantInfoElem = document.getElementById(participantInfoId);
+    participantInfoElem.remove();
     peers[call.peer] = false;
   });
 }
 
 // 有人加入會議室時要取得peer連線
-socket.on("user-connected", (userId, userName, cameraStatus) => {
+socket.on("user-connected", (userId, userName, userImg, cameraStatus) => {
   connectedToNewUser(
     userId,
     userName,
+    userImg,
     myStream,
     userInfo.id,
     userInfo.name,
+    userInfo.img,
     cameraStatus
   );
 });
@@ -471,19 +484,7 @@ socket.on("toggle-video-mask", (userId) => {
 // });
 // socket.on("hands-up_broadcast", (userId) => {});
 
-// 傳送文字訊息
-// const sendMsgBtn = document.querySelector(".send_msg__btn");
-// sendMsgBtn.addEventListener("click", (event) => {
-//   event.preventDefault();
-//   const sendMsgInput = document.querySelector(".send_msg__input").value;
-//   const now = new Date();
-//   const hour = now.getHours();
-//   let minute = now.getMinutes();
-//   minute = checkTime(minute);
-//   const time = hour + ":" + minute;
-//   socket.emit("send-msg", roomId, userInfo.name, time, sendMsgInput);
-//   document.querySelector(".send_msg__input").value = "";
-// });
+// 收到文字訊息
 socket.on("receive-msg", (userName, time, msgText) => {
   const msgContentElem = document.querySelector(".right_panel__msg_content");
   const userNameSpan = document.createElement("span");
