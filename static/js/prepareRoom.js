@@ -32,14 +32,6 @@ function authenticateUser() {
           usernameElem.classList.remove("elem--hide");
           userImgElem.setAttribute("src", userImgUrl);
           userImgBtn.classList.remove("elem--hide");
-          if (data.data.role == "student") {
-            const createRoomBtn = document.querySelector(
-              ".enter_room__create_btn"
-            );
-            const orText = document.querySelector(".enter_room__text");
-            createRoomBtn.classList.add("elem--hide");
-            orText.classList.add("elem--hide");
-          }
         } else {
           window.location.href = "/";
         }
@@ -133,8 +125,3 @@ prepareTurnOnCameraBtn.addEventListener("click", (event) => {
   console.log("開啟鏡頭");
   console.log(myCameraStatus);
 });
-
-// 渲染視訊會議室畫面
-// function renderRoomPage() {
-//   const videoContainerSection = document.createElement("section");
-// }
