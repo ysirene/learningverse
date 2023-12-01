@@ -41,3 +41,9 @@ function toggleUserOption() {
   const userOptionElem = document.querySelector(".nav__user_options");
   userOptionElem.classList.toggle("elem--hide");
 }
+
+const memberAreaBtn = document.querySelector("#member_area_btn");
+memberAreaBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  window.location.href = "/memberArea";
+});
