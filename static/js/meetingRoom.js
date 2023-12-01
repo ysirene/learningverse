@@ -54,18 +54,22 @@ function renderRoomPage() {
   rightPanelMsgInput.setAttribute("type", "text");
   rightPanelMsgInput.setAttribute("name", "msg");
   rightPanelMsgInput.setAttribute("placeholder", "傳送訊息");
-  rightPanelMsgInput.required;
+  rightPanelMsgInput.required = true;
   const rightPanelMsgSubmitBtn = document.createElement("button");
   rightPanelMsgSubmitBtn.setAttribute("class", "send_msg__btn");
   rightPanelMsgSubmitBtn.addEventListener("click", (event) => {
     event.preventDefault();
-    const sendMsgInput = document.querySelector(".send_msg__input").value;
-    const now = new Date();
-    const hour = now.getHours();
-    let minute = now.getMinutes();
-    minute = checkTime(minute);
-    const time = hour + ":" + minute;
-    socket.emit("send-msg", roomId, userInfo.name, time, sendMsgInput);
+    const sendMsgInput = document
+      .querySelector(".send_msg__input")
+      .value.trim();
+    if (sendMsgInput) {
+      const now = new Date();
+      const hour = now.getHours();
+      let minute = now.getMinutes();
+      minute = checkTime(minute);
+      const time = hour + ":" + minute;
+      socket.emit("send-msg", roomId, userInfo.name, time, sendMsgInput);
+    }
     document.querySelector(".send_msg__input").value = "";
   });
   const rightPanelMsgSubmitIcon = document.createElement("img");
@@ -280,6 +284,7 @@ function registerPeer(userId, myName, myImg) {
   peer = new Peer(userId, {
     host: "/",
     port: "9000",
+    // secure: true,
   });
   peer.on("open", (userId) => {
     // 傳送join-room訊息server
