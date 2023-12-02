@@ -88,6 +88,52 @@
   line-height: 47px;
   cursor: pointer;
 }
+.member__role {
+  margin: 15px auto 20px;
+  width: 310px;
+}
+.member__role div {
+  display: inline-block;
+}
+.member__role label {
+  position: relative;
+  padding-left: 25px;
+  margin: 0 10px;
+  display: inline-block;
+  height: 20px;
+  line-height: 20px;
+}
+.member__role input {
+  opacity: 0;
+}
+.member__role span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #e5e5e8;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.member__role span:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+.member__role label input:checked ~ span:after {
+  display: block;
+}
+.member__role label span:after {
+  /* 選取後會出現的點點 */
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #afa2ff;
+}
+
 .member__text--normal {
   margin: 0 auto 10px;
   color: #666;

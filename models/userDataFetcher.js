@@ -36,15 +36,16 @@ async function isEmailUsed(email) {
   }
 }
 
-async function insert(name, email, password) {
+async function insert(name, email, password, role) {
   try {
     const conn = await getConnection();
     const emailUsed = await isEmailUsed(email);
     if (emailUsed) {
       return false;
     } else {
-      const sql = "INSERT INTO user(name, email, password) VALUES(?, ?, ?)";
-      const userData = [name, email, password];
+      const sql =
+        "INSERT INTO user(name, email, password, role_id) VALUES(?, ?, ?, ?)";
+      const userData = [name, email, password, role];
       await conn.promise().query(sql, userData);
       conn.release();
       return true;

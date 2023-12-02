@@ -128,6 +128,7 @@ function signup(event) {
       name: signupFormData.get("name"),
       email: signupFormData.get("email"),
       password: signupFormData.get("password"),
+      role: signupFormData.get("role"),
     };
     let src = "/api/user";
     let options = {

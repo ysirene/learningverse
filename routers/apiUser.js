@@ -10,9 +10,9 @@ router.use(express.json());
 
 // 註冊
 router.post("/", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
   try {
-    const result = await userDataFetcher.insert(name, email, password);
+    const result = await userDataFetcher.insert(name, email, password, role);
     if (result) {
       return res.status(200).json({ ok: true });
     } else {
