@@ -1,0 +1,133 @@
+.container {
+  width: 1200px;
+  height: calc(100vh - 115px);
+  min-height: 450px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-evenly;
+  color: #404e4d;
+}
+.container button {
+  color: #404e4d;
+}
+.left_panel {
+  width: 20%;
+  padding: 20px 0;
+  box-sizing: content-box;
+  border-right: 1px solid #e5e5e5;
+  overflow-y: scroll;
+}
+.scrollbar {
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 10px;
+    margin: 20px 130px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #72788d;
+  }
+}
+.left_panel__btn {
+  width: 90%;
+  margin: 0 auto 25px;
+  background-color: #e3d7ff;
+  border: none;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 20px;
+  cursor: pointer;
+}
+.main_panel {
+  width: 80%;
+  padding: 20px 10px;
+  box-sizing: content-box;
+  overflow-y: scroll;
+}
+.main_panel__title {
+  font-size: 20px;
+  line-height: 24px;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+.form__item {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  padding-bottom: 15px;
+  width: 100%;
+  font-size: 16px;
+}
+.time_selected {
+  margin-left: 85px;
+  font-size: 16px;
+}
+.time_selected div {
+  padding-bottom: 15px;
+}
+.time_selected button {
+  color: red;
+  font-weight: 700;
+  border: none;
+  background-color: transparent;
+}
+.time_selected button:hover {
+  background-color: #e5e5e5;
+}
+.form__label {
+  vertical-align: top;
+}
+.form__label input {
+  padding: 5px;
+  width: 178px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1px solid #404e4d;
+  font-weight: 500;
+  font-size: 16px;
+}
+.form__label textarea {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #404e4d;
+  font-weight: 500;
+  font-size: 16px;
+}
+.form__label span {
+  font-size: 16px;
+  color: #72788d;
+}
+.form__select {
+  padding: 3px;
+  border: 1px solid #404e4d;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 16px;
+}
+.form__submit {
+  padding: 5px 20px;
+  background-color: #afa2ff;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+.time__submit {
+  margin-left: 10px;
+  padding: 0 5px;
+  background-color: #afa2ff;
+  color: #fff;
+  font-size: 14px;
+  line-height: 26.5px;
+  font-weight: 500;
+  border: none;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+}
