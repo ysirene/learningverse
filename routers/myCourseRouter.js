@@ -1,12 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const utils_getWeekday = require("../dataHandling/renderingUtilities");
 
-router.get("/teacher", (req, res) => {
-  res.render("course_teacher");
-});
-
-router.get("/student", (req, res) => {
-  res.render("course_student");
+router.get("/", (req, res) => {
+  res.render("myCourse", { getWeekday: utils_getWeekday });
 });
 
 module.exports = router;
