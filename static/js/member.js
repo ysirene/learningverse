@@ -1,34 +1,3 @@
-let signinStatus = false;
-
-// 驗證登入狀態
-function authenticateUser() {
-  let memberBtnElem = document.querySelector("#member_btn");
-  if (sessionStorage.getItem("token")) {
-    let token = sessionStorage.getItem("token");
-    let src = "/api/user/auth";
-    let options = {
-      method: "GET",
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-    };
-    ajax(src, options)
-      .then((data) => {
-        if (data.data != null) {
-          memberBtnElem.textContent = "登出系統";
-          memberBtnElem.setAttribute("onclick", "signout()");
-          signinStatus = true;
-        }
-        memberBtnElem.classList.remove("elem--invisible");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  } else {
-    memberBtnElem.classList.remove("elem--invisible");
-  }
-}
-
 // 清空登入/註冊頁面的回饋訊息
 function clearReminder() {
   let successMessageElem = document.querySelector(".member__text--success");
@@ -186,9 +155,4 @@ function signin(event) {
         console.log(error);
       });
   }
-}
-// 登出系統
-function signout() {
-  sessionStorage.clear("token");
-  location.reload();
 }
