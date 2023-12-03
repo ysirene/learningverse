@@ -42,8 +42,24 @@ function toggleUserOption() {
   userOptionElem.classList.toggle("elem--hide");
 }
 
+// 跳轉至會員中心
 const memberAreaBtn = document.querySelector("#member_area_btn");
 memberAreaBtn.addEventListener("click", (event) => {
   event.preventDefault();
   window.location.href = "/memberArea";
+});
+
+// 跳轉至我的課程
+const myCourseBtn = document.querySelector("#my_course_btn");
+myCourseBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  window.location.href = "/myCourse";
+});
+
+// 登出系統
+const signOutBtn = document.querySelector("#sign_out");
+signOutBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  sessionStorage.clear("token");
+  location.reload();
 });
