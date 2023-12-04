@@ -131,3 +131,7 @@
   text-align: center;
   cursor: pointer;
 }
+.error_msg {
+  color: red;
+  font-weight: 500;
+}

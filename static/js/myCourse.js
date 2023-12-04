@@ -123,25 +123,56 @@ addTimeBtn.addEventListener("click", (event) => {
 const addCourseForm = document.querySelector("#add_course");
 addCourseForm.addEventListener("submit", (event) => {
   event.preventDefault();
+  // 隱藏錯誤訊息
+  const errorMsgElem = document.querySelector(".error_msg");
+  errorMsgElem.classList.add("elem--hide");
+  // 檢查是否有輸入上課時間
   const timeSelectedElem = document.querySelector(".time_selected").children;
   if (timeSelectedElem.length == 0) {
     alert("請新增上課時間");
     return;
   }
   const timeSelectedArray = [];
+  const timeTranslate = {
+    "10:00~12:00": "morning",
+    "14:00~16:00": "afternoon",
+    "19:00~21:00": "night",
+  };
   for (let i = 0; i < timeSelectedElem.length; i++) {
     const tempArray = [
       timeSelectedElem[i].textContent.charAt(2),
-      timeSelectedElem[0].textContent.slice(4, -1),
+      timeTranslate[timeSelectedElem[i].textContent.slice(4, -1)],
     ];
     timeSelectedArray.push(tempArray);
   }
   const addCourseFormData = new FormData(addCourseForm);
   const addCourseData = {
+    userId: userInfo.id,
     name: addCourseFormData.get("name"),
     introduction: addCourseFormData.get("introduction"),
     outline: addCourseFormData.get("outline"),
     time: timeSelectedArray,
   };
-  console.log(addCourseData);
+  let token = sessionStorage.getItem("token");
+  let src = "/api/course";
+  let options = {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(addCourseData),
+  };
+  ajax(src, options)
+    .then((data) => {
+      if (data.ok) {
+        window.location.reload();
+      } else {
+        const errorMsgElem = document.querySelector(".error_msg");
+        errorMsgElem.classList.remove("elem--hide");
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
