@@ -38,14 +38,13 @@ async function insertCourse(userId, name, introduction, outline) {
     let roomId;
     while (true) {
       roomId = courseDataProcessor.generateRoomId();
-      console.log(roomId);
       const roomIdExists = await isRoomIdExists(roomId);
       if (!roomIdExists) {
         break;
       }
     }
     const conn = await getConnection();
-    let sql =
+    const sql =
       "INSERT INTO course(name, introduction, outline, teacher_id, room_id) VALUES(?, ?, ?, ?, ?)";
     const courseData = [name, introduction, outline, userId, roomId];
     const [result, fields] = await conn.promise().query(sql, courseData);
@@ -58,4 +57,20 @@ async function insertCourse(userId, name, introduction, outline) {
   }
 }
 
-module.exports = { insertCourse, insertCourseTime };
+async function getTeachingList(userId) {
+  try {
+    const conn = await getConnection();
+    const sql =
+      "SELECT course.*, GROUP_CONCAT(CONCAT(course_time.day_of_week,' ',course_time.time) SEPARATOR ', ') AS time \
+      FROM course INNER JOIN course_time ON course.id = course_time.course_id \
+      and course.teacher_id = ? GROUP BY course_time.course_id";
+    const [result, fields] = await conn.promise().query(sql, [userId]);
+    conn.release();
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+module.exports = { insertCourse, insertCourseTime, getTeachingList };

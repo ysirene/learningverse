@@ -33,7 +33,7 @@
 }
 .left_panel__btn {
   width: 90%;
-  margin: 0 auto 25px;
+  margin-bottom: 15px;
   background-color: #e3d7ff;
   border: none;
   border-radius: 10px;
@@ -41,9 +41,22 @@
   font-size: 20px;
   cursor: pointer;
 }
+.left_panel__sub_btn {
+  display: block;
+  margin: 0 0 15px 10px;
+  border: none;
+  background-color: transparent;
+  text-align: left;
+  font-size: 18px;
+  color: #404e4d;
+  cursor: pointer;
+}
+.left_panel__sub_btn:hover {
+  color: #afa2ff;
+}
 .main_panel {
   width: 80%;
-  padding: 20px 10px;
+  padding: 20px 30px;
   box-sizing: content-box;
   overflow-y: scroll;
 }

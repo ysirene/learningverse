@@ -17,7 +17,7 @@
       <div class="main_panel scrollbar">
         <div class="main_panel__title"></div>
         <div class="main_panel__content">
-          <form id="add_course" class="elem--hide">
+          <form id="course__form" class="elem--hide">
             <div class="form__item">
               <label class="form__label"
                 >課程名稱：<input
@@ -42,14 +42,14 @@
               <div class="form__item">
                 <label
                   >上課時間： 每周
-                  <select id="add_course_time__weekday" class="form__select">
+                  <select id="course_time__weekday" class="form__select">
                     <% for (let i = 1; i <= 7; i++) { %>
                     <option value="<%= getWeekday(i) %>">
                       <%= getWeekday(i) %>
                     </option>
                     <% } %>
                   </select>
-                  <select id="add_course_time__time" class="form__select">
+                  <select id="course_time__time" class="form__select">
                     <option value="10:00~12:00">10:00~12:00</option>
                     <option value="14:00~16:00">14:00~16:00</option>
                     <option value="19:00~21:00">19:00~21:00</option>
@@ -73,7 +73,7 @@
               >
             </div>
             <input class="form__submit" type="submit" value="送出" />
-            <span class="error_msg elem--hide">建立失敗，請稍後再試</span>
+            <span class="error_msg elem--hide">送出失敗，請稍後再試</span>
           </form>
         </div>
       </div>

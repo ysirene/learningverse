@@ -1,9 +1,10 @@
 let userInfo;
+let courseData;
+const token = sessionStorage.getItem("token");
 
 function authenticateUser() {
   return new Promise((resolve, reject) => {
-    if (sessionStorage.getItem("token")) {
-      let token = sessionStorage.getItem("token");
+    if (token) {
       let src = "/api/user/auth";
       let options = {
         method: "GET",
@@ -45,6 +46,35 @@ function authenticateUser() {
     }
   });
 }
+
+function getTeachingList() {
+  const src = "/api/myCourse/teacher";
+  const options = {
+    method: "GET",
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  };
+  ajax(src, options).then((data) => {
+    console.log(data);
+    courseData = data.data;
+    const leftPanelAttendanceRecordBtn = document.querySelector(
+      "#left_panel_attendance_record"
+    );
+    for (let i = 0; i < data.data.length; i++) {
+      const editCourseBtn = document.createElement("button");
+      const editCourseBtnId = "editCourse" + i;
+      editCourseBtn.textContent = data.data[i]["name"];
+      editCourseBtn.setAttribute("class", "left_panel__sub_btn");
+      editCourseBtn.setAttribute("id", editCourseBtnId);
+      leftPanelAttendanceRecordBtn.parentNode.insertBefore(
+        editCourseBtn,
+        leftPanelAttendanceRecordBtn
+      );
+    }
+  });
+}
+
 function renderLeftPanelForTeacher() {
   const leftPanelElem = document.querySelector(".left_panel");
   const leftPanelAddCourseBtn = document.createElement("button");
@@ -73,12 +103,24 @@ function addClickListenerToLeftPanelButton() {
   const addCourseBtn = document.querySelector("#left_panel_add_course_btn");
   addCourseBtn.addEventListener("click", (event) => {
     event.preventDefault();
-    const mainPanelElem = document.querySelector(".main_panel");
+    // 更改標題
     const mainPanelTitleElem = document.querySelector(".main_panel__title");
     mainPanelTitleElem.textContent = "建立新課程";
-    const addCourseForm = document.querySelector("#add_course");
-    addCourseForm.classList.remove("elem--hide");
+    const courseForm = document.querySelector("#course__form");
+    // 清空已選擇的時間
+    const timeSelectedElem = document.querySelector(".time_selected");
+    while (timeSelectedElem.hasChildNodes()) {
+      timeSelectedElem.removeChild(timeSelectedElem.lastChild);
+    }
+    // 變更onsubmit屬性
+    courseForm.setAttribute("onsubmit", "addNewCourse(event)");
+    courseForm.classList.remove("elem--hide");
   });
+}
+
+function showAddCoursePage() {
+  const addCourseBtn = document.querySelector("#left_panel_add_course_btn");
+  addCourseBtn.click();
 }
 
 (async function run() {
@@ -86,7 +128,9 @@ function addClickListenerToLeftPanelButton() {
     await authenticateUser();
     if (userInfo.role == "teacher") {
       renderLeftPanelForTeacher();
+      getTeachingList();
       addClickListenerToLeftPanelButton();
+      showAddCoursePage();
     }
   } catch (err) {
     console.log(err);
@@ -100,8 +144,8 @@ addTimeBtn.addEventListener("click", (event) => {
   event.preventDefault();
   const timeSelectedElem = document.querySelector(".time_selected");
   const addTimeData = {
-    weekday: document.querySelector("#add_course_time__weekday").value,
-    time: document.querySelector("#add_course_time__time").value,
+    weekday: document.querySelector("#course_time__weekday").value,
+    time: document.querySelector("#course_time__time").value,
   };
   const timeDiv = document.createElement("div");
   const timeDivId = "selectedTime" + timeNum;
@@ -120,8 +164,7 @@ addTimeBtn.addEventListener("click", (event) => {
 });
 
 // 新增課程
-const addCourseForm = document.querySelector("#add_course");
-addCourseForm.addEventListener("submit", (event) => {
+function addNewCourse(event) {
   event.preventDefault();
   // 隱藏錯誤訊息
   const errorMsgElem = document.querySelector(".error_msg");
@@ -145,7 +188,9 @@ addCourseForm.addEventListener("submit", (event) => {
     ];
     timeSelectedArray.push(tempArray);
   }
-  const addCourseFormData = new FormData(addCourseForm);
+  const addCourseFormData = new FormData(
+    document.querySelector("#course__form")
+  );
   const addCourseData = {
     userId: userInfo.id,
     name: addCourseFormData.get("name"),
@@ -153,7 +198,6 @@ addCourseForm.addEventListener("submit", (event) => {
     outline: addCourseFormData.get("outline"),
     time: timeSelectedArray,
   };
-  let token = sessionStorage.getItem("token");
   let src = "/api/myCourse";
   let options = {
     method: "POST",
@@ -175,4 +219,4 @@ addCourseForm.addEventListener("submit", (event) => {
     .catch((err) => {
       console.log(err);
     });
-});
+}
