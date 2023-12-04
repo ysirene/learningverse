@@ -154,7 +154,7 @@ addCourseForm.addEventListener("submit", (event) => {
     time: timeSelectedArray,
   };
   let token = sessionStorage.getItem("token");
-  let src = "/api/course";
+  let src = "/api/myCourse";
   let options = {
     method: "POST",
     headers: {

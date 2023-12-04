@@ -25,8 +25,6 @@ router.post("/", async (req, res) => {
       .status(500)
       .json({ error: true, message: "cannot connect to database" });
   }
-
-  // const roomId = courseDataProcessor.generateRoomId();
 });
 
 module.exports = router;
