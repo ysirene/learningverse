@@ -150,7 +150,7 @@ function addClickListenerToLeftPanelButton() {
     addCourseForm.classList.remove("elem--hide");
     // 顯示查看課程的頁面
     const viewMyCourseElem = document.querySelector("#view_my_course");
-    viewMyCourseElem.classList.remove("elem--hide");
+    viewMyCourseElem.classList.add("elem--hide");
     // 清空已選擇的時間
     // const timeSelectedElem = document.querySelector(".time_selected");
     // while (timeSelectedElem.hasChildNodes()) {
@@ -171,8 +171,7 @@ function showAddCoursePage() {
       renderLeftPanelForTeacher();
       getTeachingList();
       addClickListenerToLeftPanelButton();
-      // TODO:將這句取消註解
-      // showAddCoursePage();
+      showAddCoursePage();
     }
   } catch (err) {
     console.log(err);
