@@ -147,3 +147,16 @@
   color: red;
   font-weight: 500;
 }
+.my_course__item {
+  display: flex;
+  margin-bottom: 15px;
+}
+.my_course__title {
+  width: 100px;
+}
+.my_course__content {
+  width: 700px;
+}
+.newline {
+  white-space: pre-line;
+}
