@@ -5,9 +5,10 @@ const server = require("http").Server(app);
 global.server = server;
 
 const apiUserRouter = require("./routers/apiUser");
+const apiMyCourseRouter = require("./routers/apiMyCourse");
+const apiCourseRouter = require("./routers/apiCourse");
 const roomRouter = require("./routers/roomRouter");
 const memberAreaRouter = require("./routers/memberAreaRouter");
-const apiMyCourseRouter = require("./routers/apiMyCourse");
 const myCourseRouter = require("./routers/myCourseRouter");
 
 const port = 5001;
@@ -16,9 +17,10 @@ app.use(express.static("static"));
 app.set("view engine", "ejs");
 
 app.use("/api/user", apiUserRouter);
+app.use("/api/myCourse", apiMyCourseRouter);
+app.use("/api/course", apiCourseRouter);
 app.use("/room", roomRouter);
 app.use("/memberArea", memberAreaRouter);
-app.use("/api/myCourse", apiMyCourseRouter);
 app.use("/myCourse", myCourseRouter);
 
 app.get("/", (req, res) => {

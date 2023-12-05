@@ -73,4 +73,23 @@ async function getTeachingList(userId) {
   }
 }
 
-module.exports = { insertCourse, insertCourseTime, getTeachingList };
+async function getCourseInfoForIndexPage() {
+  try {
+    const conn = await getConnection();
+    const sql =
+      "SELECT course.id, course.name, course.introduction, course.image_name, user.name AS teacher_name FROM course INNER JOIN user ON course.teacher_id = user.id And course.deleted=0";
+    const [result, fields] = await conn.promise().query(sql);
+    conn.release();
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+module.exports = {
+  insertCourse,
+  insertCourseTime,
+  getTeachingList,
+  getCourseInfoForIndexPage,
+};
