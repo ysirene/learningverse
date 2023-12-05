@@ -45,7 +45,7 @@ function renderRoomPage() {
   const rightPanelMsgContent = document.createElement("div");
   rightPanelMsgContent.setAttribute(
     "class",
-    "right_panel__msg_content right_panel__scrollbar"
+    "right_panel__msg_content scrollbar"
   );
   const rightPanelMsgForm = document.createElement("form");
   rightPanelMsgForm.setAttribute("class", "send_msg__form");
@@ -92,7 +92,7 @@ function renderRoomPage() {
   const rightPanelParticipantContent = document.createElement("div");
   rightPanelParticipantContent.setAttribute(
     "class",
-    "right_panel__participantContent right_panel__scrollbar"
+    "right_panel__participantContent scrollbar"
   );
   rightPanelParticipantDiv.append(
     rightPanelParticipantTitle,

@@ -28,3 +28,18 @@ a:active {
 .elem--invisible {
   visibility: hidden;
 }
+
+.scrollbar {
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 10px;
+    margin: 20px 130px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #72788d;
+  }
+}
