@@ -11,9 +11,9 @@
     <link rel="shortcut icon" href="/image/logo.png" />
     <title>Learningverse</title>
   </head>
-  <body>
+  <body class="scrollbar">
     <%- include("partials/navigation") %> <%- include("partials/member") %>
-    <main class="container">
+    <header class="header_container">
       <section class="slogan">
         <div class="slogan__title">開啟知識的大門<br />處處皆學堂</div>
         <div class="slogan__body">
@@ -24,7 +24,7 @@
         </button>
         <section class="enter_room">
           <button class="enter_room__create_btn">
-            開啟新教室<img src="/image/arrow-down-sign.png" />
+            開啟教室<img src="/image/arrow-down-sign.png" />
           </button>
           <span class="enter_room__text">或者</span>
           <form id="search_room">
@@ -43,6 +43,21 @@
         <img src="/image/online-education-2.png" class="pictures__2" />
         <img src="/image/online-education-3.png" class="pictures__3" />
       </section>
+    </header>
+    <hr class="separator" />
+    <main class="main_container">
+      <div class="course__container">
+        <img
+          src="https://d277hbzet0a7g8.cloudfront.net/courseImage/defaultCourseImg.png"
+        />
+        <div class="course__title">
+          本課程旨在教授中樞神經系統結構與功能、感覺與知覺機制、飲食
+        </div>
+        <div class="course__teacher">by ㄆㄆ</div>
+        <div class="">
+          本課程旨在教授中樞神經系統結構與功能、感覺與知覺機制、飲食、睡眠、性行為、學習的生理心理機制，並介紹常見腦部病變、精神疾病，深入神經科學新知，以及神經科學在生活中的應用及對人類的影響補補補補補補補。
+        </div>
+      </div>
     </main>
     <%- include("partials/footer") %>
     <script type="text/javascript" src="/js/navigation.js"></script>

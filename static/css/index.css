@@ -1,7 +1,6 @@
-.container {
+.header_container {
   width: 1200px;
-  height: calc(100vh - 115px);
-  min-height: 450px;
+  height: 350px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -9,16 +8,16 @@
 }
 .slogan {
   width: 45%;
-  margin: 80px auto;
+  margin: auto;
 }
 .slogan__title {
-  margin-bottom: 40px;
+  margin-bottom: 35px;
   color: #000;
-  font-size: 45px;
+  font-size: 35px;
   font-weight: 400;
 }
 .slogan__body {
-  margin-bottom: 50px;
+  margin-bottom: 45px;
   color: #72788d;
   font-size: 20px;
   font-weight: 400;
@@ -76,25 +75,70 @@
   cursor: pointer;
 }
 .pictures__frame {
-  height: 400px;
+  height: 350px;
   width: 45%;
   position: relative;
 }
 .pictures__1 {
   position: absolute;
-  width: 174px;
-  top: 5%;
-  left: 45%;
+  width: 140px;
+  top: 8%;
+  left: 48%;
 }
 .pictures__2 {
   position: absolute;
-  width: 193px;
+  width: 175px;
   top: 30%;
-  left: 10%;
+  left: 15%;
 }
 .pictures__3 {
   position: absolute;
-  width: 175px;
-  top: 50%;
-  left: 55%;
+  width: 150px;
+  top: 49%;
+  left: 56%;
+}
+.separator {
+  border: none;
+  width: 1200px;
+  height: 1px;
+  background-color: #e8e8e8;
+  margin: 0 auto;
+}
+.main_container {
+  padding: 15px 0;
+  width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+.course__container {
+  margin: 15px;
+  width: calc(25% - 30px);
+  cursor: pointer;
+}
+.course__container img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.course__container div {
+  margin-top: 10px;
+  width: 100%;
+}
+.course__title {
+  font-size: 18px;
+  color: #000;
+  height: 52px;
+}
+.course__teacher {
+  height: 18px;
+  font-size: 14px;
+  line-height: 18px;
+  color: #72788d;
+}
+.course__introduction {
+  height: 120px;
+  font-size: 14px;
+  color: #72788d;
 }

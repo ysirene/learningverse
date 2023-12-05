@@ -1,5 +1,5 @@
 // 驗證登入狀態
-(function authenticateUser() {
+function authenticateUser() {
   const signinBtnElem = document.querySelector("#nav__signinSignup");
   if (sessionStorage.getItem("token")) {
     let token = sessionStorage.getItem("token");
@@ -49,6 +49,25 @@
   } else {
     signinBtnElem.classList.remove("elem--hide");
   }
+}
+
+function getCourseInfo() {
+  const src = "/api/course";
+  const options = {
+    method: "GET",
+  };
+  ajax(src, options)
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+(function run() {
+  authenticateUser();
+  getCourseInfo();
 })();
 
 // 根據代碼或連結進入教室
