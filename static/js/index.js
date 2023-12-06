@@ -59,6 +59,56 @@ function getCourseInfo() {
   ajax(src, options)
     .then((data) => {
       console.log(data);
+      for (let i = 0; i < data.data.length; i++) {
+        // 課程容器
+        const containerDiv = document.createElement("div");
+        containerDiv.setAttribute("class", "course__container");
+        // 課程圖片
+        const imgContainerDiv = document.createElement("div");
+        imgContainerDiv.setAttribute("class", "img_container");
+        const img = document.createElement("img");
+        img.setAttribute(
+          "src",
+          "https://d277hbzet0a7g8.cloudfront.net/courseImage/" +
+            data.data[i].image_name
+        );
+        imgContainerDiv.append(img);
+        // 課程名稱
+        const titleDiv = document.createElement("div");
+        titleDiv.setAttribute("class", "course__title");
+        titleDiv.textContent = data.data[i].name;
+        // 授課老師姓名
+        const teacherDiv = document.createElement("div");
+        teacherDiv.setAttribute("class", "course__teacher");
+        teacherDiv.textContent = "by " + data.data[i].teacher_name;
+        // 課程簡介
+        const introductionDiv = document.createElement("div");
+        introductionDiv.setAttribute("class", "course__introduction");
+        introductionDiv.textContent = data.data[i].introduction;
+
+        // 監聽事件
+        containerDiv.addEventListener("click", (event) => {
+          window.location.href = "/course/" + data.data[i].id;
+        });
+        containerDiv.addEventListener("mouseenter", (event) => {
+          img.style.animation = "course_img_mouseenter 0.7s ease-in-out";
+          img.style.animationFillMode = "forwards";
+          console.log("mouseenter" + data.data[i].id);
+        });
+        containerDiv.addEventListener("mouseleave", (event) => {
+          console.log("mouseleave" + data.data[i].id);
+          img.style.animation = "course_img_mouseleave 0.7s ease-in-out";
+        });
+
+        containerDiv.append(
+          imgContainerDiv,
+          titleDiv,
+          teacherDiv,
+          introductionDiv
+        );
+        const mainContainerElem = document.querySelector(".main_container");
+        mainContainerElem.append(containerDiv);
+      }
     })
     .catch((err) => {
       console.log(err);
