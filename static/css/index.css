@@ -1,6 +1,6 @@
 .header_container {
   width: 1200px;
-  height: 350px;
+  height: 380px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -8,7 +8,7 @@
 }
 .slogan {
   width: 45%;
-  margin: auto;
+  margin: auto auto auto 20px;
 }
 .slogan__title {
   margin-bottom: 35px;
@@ -83,26 +83,26 @@
   position: absolute;
   width: 140px;
   top: 8%;
-  left: 48%;
+  left: 55%;
 }
 .pictures__2 {
   position: absolute;
-  width: 175px;
+  width: 180px;
   top: 30%;
-  left: 15%;
+  left: 20%;
 }
 .pictures__3 {
   position: absolute;
   width: 150px;
   top: 49%;
-  left: 56%;
+  left: 63%;
 }
 .separator {
   border: none;
   width: 1200px;
   height: 1px;
   background-color: #e8e8e8;
-  margin: 0 auto;
+  margin: 0 auto 20px;
 }
 .main_container {
   padding: 15px 0;
@@ -116,11 +116,34 @@
   width: calc(25% - 30px);
   cursor: pointer;
 }
-.course__container img {
+.img_container {
+  overflow: hidden;
   width: 100%;
-  height: 150px;
+  height: 165px;
+  border-radius: 10px;
+}
+.img_container img {
   object-fit: cover;
-  border-radius: 5px;
+  width: 100%;
+  height: 165px;
+  transform-origin: center center;
+}
+
+@keyframes course_img_mouseenter {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.2);
+  }
+}
+@keyframes course_img_mouseleave {
+  from {
+    transform: scale(1.2);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 .course__container div {
   margin-top: 10px;
@@ -129,16 +152,13 @@
 .course__title {
   font-size: 18px;
   color: #000;
-  height: 52px;
 }
 .course__teacher {
-  height: 18px;
   font-size: 14px;
-  line-height: 18px;
+  line-height: 17px;
   color: #72788d;
 }
 .course__introduction {
-  height: 120px;
   font-size: 14px;
   color: #72788d;
 }
