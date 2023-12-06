@@ -134,12 +134,12 @@
     transform: scale(1);
   }
   to {
-    transform: scale(1.2);
+    transform: scale(1.1);
   }
 }
 @keyframes course_img_mouseleave {
   from {
-    transform: scale(1.2);
+    transform: scale(1.1);
   }
   to {
     transform: scale(1);
