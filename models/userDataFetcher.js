@@ -4,7 +4,7 @@ async function isValidCredential(email, password) {
   try {
     const conn = await getConnection();
     const sql =
-      "SELECT user.*, role.role_type FROM user INNER JOIN role ON user.role_id = role.id WHERE user.email = ? AND user.password = ?";
+      "SELECT user.*, user_role.type FROM user INNER JOIN user_role ON user.user_role_id = user_role.id WHERE user.email = ? AND user.password = ?";
     const credential = [email, password];
     const result = await conn.promise().query(sql, credential);
     conn.release();
@@ -44,7 +44,7 @@ async function insert(name, email, password, role) {
       return false;
     } else {
       const sql =
-        "INSERT INTO user(name, email, password, role_id) VALUES(?, ?, ?, ?)";
+        "INSERT INTO user(name, email, password, user_role_id) VALUES(?, ?, ?, ?)";
       const userData = [name, email, password, role];
       await conn.promise().query(sql, userData);
       conn.release();

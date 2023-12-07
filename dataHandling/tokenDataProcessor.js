@@ -7,7 +7,7 @@ function encodeToken(data) {
     id: data.id,
     name: data.name,
     email: data.email,
-    role: data.role_type,
+    role: data.type,
     img: data.image_name,
   };
   const registeredClaims = { algorithm: "HS256", expiresIn: "7d" };
