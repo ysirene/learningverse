@@ -103,9 +103,24 @@ async function getCourseInfoForIndexPage() {
   }
 }
 
+async function getSpecificCourseInfo(courseId) {
+  try {
+    const conn = await getConnection();
+    const sql =
+      "SELECT course.*, user.name AS teacher_name, user.image_name AS teacher_image \
+      FROM course INNER JOIN user ON course.teacher_id = user.id And course.id = ?";
+    const [result, fields] = await conn.promise().query(sql, [courseId]);
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
 module.exports = {
   insertCourse,
   insertCourseTime,
   getTeachingList,
   getCourseInfoForIndexPage,
+  getSpecificCourseInfo,
 };
