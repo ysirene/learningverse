@@ -237,6 +237,8 @@ addCourseForm.addEventListener("submit", (event) => {
     userId: userInfo.id,
     name: addCourseFormData.get("name"),
     introduction: addCourseFormData.get("introduction"),
+    startDate: addCourseFormData.get("start_date"),
+    endDate: addCourseFormData.get("end_date"),
     outline: addCourseFormData.get("outline"),
     time: timeSelectedArray,
   };

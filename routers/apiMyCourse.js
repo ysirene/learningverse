@@ -10,13 +10,16 @@ router.use(express.json());
 
 // 新增課程
 router.post("/", async (req, res) => {
-  const { userId, name, introduction, outline, time } = req.body;
+  const { userId, name, introduction, outline, startDate, endDate, time } =
+    req.body;
   try {
     const courseId = await courseDataFetcher.insertCourse(
       userId,
       name,
       introduction,
-      outline
+      outline,
+      startDate,
+      endDate
     );
     await courseDataFetcher.insertCourseTime(courseId, time);
     return res.status(200).json({ ok: true });

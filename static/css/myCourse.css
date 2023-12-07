@@ -56,7 +56,7 @@
   display: flex;
   align-items: center;
   margin: 0 auto;
-  padding-bottom: 15px;
+  padding-bottom: 20px;
   width: 100%;
   font-size: 16px;
 }
@@ -76,10 +76,10 @@
 .time_selected button:hover {
   background-color: #e5e5e5;
 }
-.form__label {
+.form__outline_label {
   vertical-align: top;
 }
-.form__label input {
+.form__text_input {
   padding: 5px;
   width: 350px;
   height: 18px;
@@ -87,7 +87,15 @@
   border: 1px solid #404e4d;
   font-size: 16px;
 }
-.form__label textarea {
+.form__date_input {
+  padding: 5px;
+  width: 150px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1px solid #404e4d;
+  font-size: 16px;
+}
+.form__outline_label textarea {
   padding: 5px;
   border-radius: 5px;
   border: 1px solid #404e4d;

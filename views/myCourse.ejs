@@ -19,8 +19,9 @@
         <div class="main_panel__content">
           <form id="add_course__form" class="elem--hide">
             <div class="form__item">
-              <label class="form__label"
+              <label
                 >課程名稱：<input
+                  class="form__text_input"
                   name="name"
                   type="text"
                   maxlength="20"
@@ -29,14 +30,35 @@
               >
             </div>
             <div class="form__item">
-              <label class="form__label"
+              <label
                 >課程簡介：<input
+                  class="form__text_input"
                   name="introduction"
                   type="text"
                   maxlength="100"
                   required
                 /><span>（限100字）</span></label
               >
+            </div>
+            <div class="form__item">
+              <label
+                >開始日期：
+                <input
+                  class="form__date_input"
+                  type="date"
+                  name="start_date"
+                  required
+                />
+              </label>
+              <label style="margin-left: 20px"
+                >結束日期：
+                <input
+                  class="form__date_input"
+                  type="date"
+                  name="end_date"
+                  required
+                />
+              </label>
             </div>
             <div>
               <div class="form__item">
@@ -60,7 +82,7 @@
               <div class="time_selected"></div>
             </div>
             <div class="form__item">
-              <label class="form__label"
+              <label class="form__outline_label"
                 >課程大綱：<textarea
                   name="outline"
                   maxlength="500"
