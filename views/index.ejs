@@ -45,7 +45,22 @@
       </section>
     </header>
     <hr class="separator" />
-    <main class="main_container"></main>
+    <ul class="course_menu">
+      <li class="active" id="upcoming_course_btn">即將上線的課程</li>
+      <li id="ongoing_course_btn">正在進行的課程</li>
+    </ul>
+    <main>
+      <section
+        class="courses_container"
+        id="upcoming_course_container"
+        style="display: flex"
+      ></section>
+      <section
+        class="courses_container"
+        id="ongoing_course_container"
+        style="display: none"
+      ></section>
+    </main>
     <%- include("partials/footer") %>
     <script type="text/javascript" src="/js/navigation.js"></script>
     <script type="text/javascript" src="/js/ajax.js"></script>

@@ -93,11 +93,13 @@ function getCourseInfo() {
         containerDiv.addEventListener("mouseenter", (event) => {
           img.style.animation = "course_img_mouseenter 0.7s ease-in-out";
           img.style.animationFillMode = "forwards";
-          console.log("mouseenter" + data.data[i].id);
         });
         containerDiv.addEventListener("mouseleave", (event) => {
-          console.log("mouseleave" + data.data[i].id);
           img.style.animation = "course_img_mouseleave 0.7s ease-in-out";
+          function removeAnimation() {
+            img.style.animation = "";
+          }
+          setTimeout(removeAnimation, 800);
         });
 
         containerDiv.append(
@@ -106,8 +108,20 @@ function getCourseInfo() {
           teacherDiv,
           introductionDiv
         );
-        const mainContainerElem = document.querySelector(".main_container");
-        mainContainerElem.append(containerDiv);
+        // 是否已開課
+        const startDate = new Date(data.data[i].start_date);
+        const today = new Date();
+        if (startDate > today) {
+          const upcomingCourseContainer = document.querySelector(
+            "#upcoming_course_container"
+          );
+          upcomingCourseContainer.append(containerDiv);
+        } else {
+          const ongoingCourseContainer = document.querySelector(
+            "#ongoing_course_container"
+          );
+          ongoingCourseContainer.append(containerDiv);
+        }
       }
     })
     .catch((err) => {
@@ -150,4 +164,28 @@ createRoomBtn.addEventListener("click", (e) => {
   e.preventDefault();
   const roomId = generateRoomId();
   window.location.href = "/room/" + roomId;
+});
+
+// 課程種類選擇
+const upcomingCourseBtn = document.querySelector("#upcoming_course_btn");
+const ongoingCourseBtn = document.querySelector("#ongoing_course_btn");
+const upcomingCourseContainer = document.querySelector(
+  "#upcoming_course_container"
+);
+const ongoingCourseContainer = document.querySelector(
+  "#ongoing_course_container"
+);
+// 即將上線的課程
+upcomingCourseBtn.addEventListener("click", (event) => {
+  ongoingCourseBtn.classList.remove("active");
+  ongoingCourseContainer.style.display = "none";
+  upcomingCourseBtn.classList.add("active");
+  upcomingCourseContainer.style.display = "flex";
+});
+// 正在進行的課程
+ongoingCourseBtn.addEventListener("click", (event) => {
+  upcomingCourseBtn.classList.remove("active");
+  upcomingCourseContainer.style.display = "none";
+  ongoingCourseBtn.classList.add("active");
+  ongoingCourseContainer.style.display = "flex";
 });
