@@ -58,6 +58,62 @@ function getCourseInfo() {
   };
   ajax(src, options).then((data) => {
     console.log(data);
+    const courseImgElem = document.querySelector("#course_img");
+    courseImgElem.setAttribute(
+      "src",
+      "https://d277hbzet0a7g8.cloudfront.net/courseImage/" +
+        data.data.image_name
+    );
+    // 授課老師的資料
+    const teacherImgElem = document.querySelector(".text__teacher_img");
+    teacherImgElem.setAttribute(
+      "src",
+      "https://d277hbzet0a7g8.cloudfront.net/userImage/" +
+        data.data.teacher_image
+    );
+    const teacherNameElem = document.querySelector(".text__teacher_name");
+    teacherNameElem.textContent = data.data.teacher_name;
+    // 課程資料
+    const courseNameElem = document.querySelector(".text__course_name");
+    courseNameElem.textContent = data.data.name;
+    const courseIntroductionElem = document.querySelector(
+      ".text__course_introduction"
+    );
+    courseIntroductionElem.textContent = data.data.introduction;
+    const startDate = new Date(data.data.start_date);
+    const formattedStartDate = formatDate(startDate);
+    const endDate = new Date(data.data.end_date);
+    const formattedEndDate = formatDate(endDate);
+    const courseDateElem = document.querySelector("#course_date");
+    courseDateElem.textContent = formattedStartDate + " ~ " + formattedEndDate;
+    const courseTimeArr = data.data.time.split(", ");
+    let timeTextContent = "";
+    const timeTranslate = {
+      morning: "10:00~12:00",
+      afternoon: "14:00~16:00",
+      night: "19:00~21:00",
+    };
+    for (let i = 0; i < courseTimeArr.length; i++) {
+      const timeArr = courseTimeArr[i].split(" ");
+      let tempText = "每周" + timeArr[0] + " " + timeTranslate[timeArr[1]];
+      if (i != courseTimeArr.length - 1) {
+        tempText += "、";
+      }
+      timeTextContent += tempText;
+    }
+    const courseTimeElem = document.querySelector("#course_time");
+    courseTimeElem.textContent = timeTextContent;
+    // 顯示按鈕
+    const today = new Date();
+    if (startDate > today) {
+      const enrollBtn = document.querySelector("#enroll_btn");
+      enrollBtn.classList.remove("elem--hide");
+    } else {
+      const auditBtn = document.querySelector("#audit_btn");
+      auditBtn.classList.remove("elem--hide");
+    }
+    const courseOutlineElem = document.querySelector(".outline__context");
+    courseOutlineElem.textContent = data.data.outline;
   });
 }
 
