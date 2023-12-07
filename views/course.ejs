@@ -12,8 +12,20 @@
     <title>Learningverse</title>
   </head>
   <body class="scrollbar">
-    <%- include("partials/navigation") %> <%- include("partials/member") %> <%-
-    include("partials/footer") %>
+    <%- include("partials/navigation") %> <%- include("partials/member") %>
+    <main>
+      <section class="brief_info">
+        <div class="brief__img_container">
+          <img
+            src="https://d277hbzet0a7g8.cloudfront.net/courseImage/defaultCourseImg.png"
+          />
+        </div>
+        <div class="brief__text_container"></div>
+      </section>
+      <section class="outline"></section>
+    </main>
+
+    <%- include("partials/footer") %>
     <script type="text/javascript" src="/js/navigation.js"></script>
     <script type="text/javascript" src="/js/ajax.js"></script>
     <script type="text/javascript" src="/js/member.js"></script>

@@ -1,0 +1,27 @@
+main {
+  width: 1200px;
+}
+.brief_info {
+  width: 95%;
+  display: flex;
+  margin: 0 auto;
+  justify-content: space-between;
+}
+.brief__img_container {
+  display: flex;
+  align-items: center;
+  width: calc(50% - 10px);
+  height: 350px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+.brief__img_container img {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.brief__text_container {
+  width: calc(50% - 10px);
+  height: 350px;
+  background-color: antiquewhite;
+}
