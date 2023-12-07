@@ -78,7 +78,7 @@ async function getTeachingList(userId) {
     const sql =
       "SELECT course.*, GROUP_CONCAT(CONCAT(course_time.day_of_week,' ',course_time.time) SEPARATOR ', ') AS time \
       FROM course INNER JOIN course_time ON course.id = course_time.course_id \
-      and course.teacher_id = ? GROUP BY course_time.course_id";
+      AND course.teacher_id = ? GROUP BY course_time.course_id";
     const [result, fields] = await conn.promise().query(sql, [userId]);
     conn.release();
     return result;
@@ -93,7 +93,7 @@ async function getCourseInfoForIndexPage() {
     const conn = await getConnection();
     const sql =
       "SELECT course.*, user.name AS teacher_name \
-      FROM course INNER JOIN user ON course.teacher_id = user.id And course.deleted = 0";
+      FROM course INNER JOIN user ON course.teacher_id = user.id AND course.deleted = 0";
     const [result, fields] = await conn.promise().query(sql);
     conn.release();
     return result;
@@ -107,10 +107,10 @@ async function getSpecificCourseInfo(courseId) {
   try {
     const conn = await getConnection();
     const sql =
-      "SELECT course.*, user.name AS teacher_name, user.image_name AS teacher_image \
-      FROM course INNER JOIN user ON course.teacher_id = user.id And course.id = ?";
+      "SELECT course.*, user.name AS teacher_name, user.image_name AS teacher_image, GROUP_CONCAT(CONCAT(course_time.day_of_week,' ',course_time.time) SEPARATOR ', ') AS time \
+      FROM course INNER JOIN user ON course.teacher_id = user.id  INNER JOIN course_time ON course.id = course_time.course_id AND course.id = ? GROUP BY course_time.course_id";
     const [result, fields] = await conn.promise().query(sql, [courseId]);
-    return result;
+    return result[0];
   } catch (err) {
     console.log(err);
     throw err;
