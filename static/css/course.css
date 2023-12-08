@@ -85,3 +85,15 @@ main {
   font-size: 16px;
   white-space: pre-line;
 }
+.reminder--error {
+  padding-left: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  color: red;
+}
+.reminder--success {
+  padding-left: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  color: green;
+}

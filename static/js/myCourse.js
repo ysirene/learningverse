@@ -242,7 +242,7 @@ addCourseForm.addEventListener("submit", (event) => {
     outline: addCourseFormData.get("outline"),
     time: timeSelectedArray,
   };
-  let src = "/api/myCourse";
+  let src = "/api/myCourse/teacher";
   let options = {
     method: "POST",
     headers: {

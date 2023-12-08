@@ -9,7 +9,7 @@ const router = express.Router();
 router.use(express.json());
 
 // 新增課程
-router.post("/", async (req, res) => {
+router.post("/teacher", async (req, res) => {
   const { userId, name, introduction, outline, startDate, endDate, time } =
     req.body;
   try {
@@ -45,6 +45,28 @@ router.get("/teacher", async (req, res) => {
     return res
       .status(500)
       .json({ error: true, message: "cannot connect to database" });
+  }
+});
+
+// 新增選課
+router.post("/student", async (req, res) => {
+  const { student_id, student_role_id, course_id } = req.body;
+  try {
+    await courseDataFetcher.insertCourseSelection(
+      student_id,
+      student_role_id,
+      course_id
+    );
+    return res.status(200).json({ ok: true });
+  } catch (err) {
+    if (err.code === "ER_CON_COUNT_ERROR") {
+      return res
+        .status(500)
+        .json({ error: true, message: "cannot connect to database" });
+    } else if (err.code === "ER_DUP_ENTRY")
+      return res
+        .status(400)
+        .json({ error: true, message: "data already exist" });
   }
 });
 
