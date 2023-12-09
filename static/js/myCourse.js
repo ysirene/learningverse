@@ -90,6 +90,11 @@ function getTeachingList() {
         // 課程名稱
         const nameElem = document.querySelector("#view__name");
         nameElem.textContent = data.data[i].name;
+        // 隱藏授課教師
+        const teacherNameContainer = document.querySelector(
+          "#teacher_name_container"
+        );
+        teacherNameContainer.style.display = "none";
         // 課程代碼
         const codeElem = document.querySelector("#view__code");
         codeElem.textContent = data.data[i].room_id;
@@ -144,9 +149,6 @@ function getCourseSelectionList() {
   ajax(src, options).then((data) => {
     console.log(data);
     courseData = data.data;
-    // const leftPanelAttendanceRecordBtn = document.querySelector(
-    //   "#left_panel_attendance_record"
-    // );
     for (let i = 0; i < data.data.length; i++) {
       const viewCourseBtn = document.createElement("button");
       const viewCourseBtnId = "viewCourse" + i;
@@ -163,7 +165,6 @@ function getCourseSelectionList() {
         nameElem.textContent = data.data[i].name;
         // 授課教師
         const teacherNameElem = document.querySelector("#view__teacher_name");
-        teacherNameElem.classList.remove("elem--hide");
         teacherNameElem.textContent = data.data[i].teacher_name;
         // 課程代碼
         const codeElem = document.querySelector("#view__code");
