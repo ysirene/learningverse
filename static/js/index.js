@@ -1,46 +1,55 @@
+let userInfo = null;
+const token = sessionStorage.getItem("token");
+
 // 驗證登入狀態
 function authenticateUser() {
-  const signinBtnElem = document.querySelector("#nav__signinSignup");
-  if (sessionStorage.getItem("token")) {
-    let token = sessionStorage.getItem("token");
-    let src = "/api/user/auth";
-    let options = {
-      method: "GET",
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-    };
-    ajax(src, options)
-      .then((data) => {
-        if (data.data != null) {
-          const usernameElem = document.querySelector("#nav__username");
-          const userImgElem = document.querySelector("#nav__user_img");
-          const userImgBtn = document.querySelector(".nav__user_img");
-          const userImgUrl =
-            "https://d277hbzet0a7g8.cloudfront.net/userImage/" + data.data.img;
-          const sloganBtnElem = document.querySelector(".slogan__signin_btn");
-          const enterRoomElem = document.querySelector(".enter_room");
-          const roleTranslate = {
-            teacher: "老師",
-            student: "同學",
-          };
-          usernameElem.textContent =
-            data.data.name + " " + roleTranslate[data.data.role];
-          usernameElem.classList.remove("elem--hide");
-          userImgElem.setAttribute("src", userImgUrl);
-          userImgBtn.classList.remove("elem--hide");
-          enterRoomElem.style.display = "flex";
-          sloganBtnElem.classList.add("elem--hide");
-        } else {
-          signinBtnElem.classList.remove("elem--hide");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  } else {
-    signinBtnElem.classList.remove("elem--hide");
-  }
+  return new Promise((resolve, reject) => {
+    const signinBtnElem = document.querySelector("#nav__signinSignup");
+    if (token) {
+      let src = "/api/user/auth";
+      let options = {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      };
+      ajax(src, options)
+        .then((data) => {
+          if (data.data != null) {
+            userInfo = data.data;
+            const usernameElem = document.querySelector("#nav__username");
+            const userImgElem = document.querySelector("#nav__user_img");
+            const userImgBtn = document.querySelector(".nav__user_img");
+            const userImgUrl =
+              "https://d277hbzet0a7g8.cloudfront.net/userImage/" +
+              data.data.img;
+            const sloganBtnElem = document.querySelector(".slogan__signin_btn");
+            const enterRoomElem = document.querySelector(".enter_room");
+            const roleTranslate = {
+              teacher: "老師",
+              student: "同學",
+            };
+            usernameElem.textContent =
+              data.data.name + " " + roleTranslate[data.data.role];
+            usernameElem.classList.remove("elem--hide");
+            userImgElem.setAttribute("src", userImgUrl);
+            userImgBtn.classList.remove("elem--hide");
+            enterRoomElem.style.display = "flex";
+            sloganBtnElem.classList.add("elem--hide");
+          } else {
+            signinBtnElem.classList.remove("elem--hide");
+          }
+          resolve();
+        })
+        .catch((error) => {
+          console.log(error);
+          reject();
+        });
+    } else {
+      signinBtnElem.classList.remove("elem--hide");
+      resolve();
+    }
+  });
 }
 
 function getCourseInfo() {
@@ -121,9 +130,62 @@ function getCourseInfo() {
     });
 }
 
-(function run() {
-  authenticateUser();
+function showCourseNotification() {
+  const now = new Date();
+  const hour = now.getHours();
+  let time;
+  if (hour >= 10 && hour < 12) {
+    time = "morning";
+  } else if (hour >= 14 && hour < 16) {
+    time = "afternoon";
+  } else if (hour >= 19 && hour < 21) {
+    time = "night";
+  } else {
+    return;
+  }
+  const weekday = translateDay(now.getDay());
+  const date =
+    now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+  const src =
+    "/api/myCourse/now?weekday=" + weekday + "&date=" + date + "&time=" + time;
+  const options = {
+    method: "GET",
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  };
+  ajax(src, options).then((data) => {
+    console.log(data);
+    if (data.data != null) {
+      // 課程名稱
+      const reminderTitle = document.querySelector(".class_reminder__title");
+      reminderTitle.textContent = "🔔 " + data.data.name;
+      // 進入教室按鈕動作
+      const reminderBtn = document.querySelector(".class_reminder__btn");
+      reminderBtn.addEventListener("click", () => {
+        window.location.href = "/room/" + data.data.room_id;
+      });
+      // body的margin增加
+      const body = document.getElementsByTagName("body")[0];
+      body.classList.replace("body--normal", "body--more_space");
+      // 導覽列往下
+      const navBackgroundElem = document.querySelector(".nav__background--top");
+      const navElem = document.querySelector(".nav--top");
+      navBackgroundElem.setAttribute("class", "nav__background--space");
+      navElem.setAttribute("class", "nav--space");
+      // 顯示reminder
+      const reminderContainer = document.querySelector(".class_reminder");
+      reminderContainer.setAttribute("style", "display: flex");
+    }
+  });
+}
+
+(async function run() {
   getCourseInfo();
+  await authenticateUser();
+  if (userInfo) {
+    showCourseNotification();
+  }
 })();
 
 // 根據代碼或連結進入教室
