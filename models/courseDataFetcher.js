@@ -150,6 +150,43 @@ async function getCourseSelectionList(userId) {
   }
 }
 
+// 老師取得現在正在進行的課程（for渲染通知在首頁）
+async function getOngoingTeachingCourse(userId, weekday, time, date) {
+  try {
+    const conn = await getConnection();
+    const data = [userId, date, date, weekday, time];
+    const sql =
+      "SELECT course.* FROM course INNER JOIN course_time ON course.id = course_time.course_id \
+      AND course.teacher_id = ? AND course.deleted = 0 AND ? > course.start_date AND ? < course.end_date \
+      AND course_time.day_of_week = ? AND course_time.time = ?";
+    const [result, fields] = await conn.promise().query(sql, data);
+    conn.release();
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+// 學生取得現在正在進行的課程（for渲染通知在首頁）
+async function getOngoingCourse(userId, weekday) {
+  try {
+    const conn = await getConnection();
+    const sql =
+      "SELECT course_selection.*, \
+      course.name, course.introduction, course.outline, course.room_id, course.deleted, course.image_name, course.start_date, course.end_date, \
+      user.name AS teacher_name, GROUP_CONCAT(CONCAT(course_time.day_of_week,' ',course_time.time) SEPARATOR ', ') AS time \
+      FROM course_selection INNER JOIN course ON course_selection.course_id = course.id INNER JOIN user ON course.teacher_id = user.id INNER JOIN course_time ON course_selection.course_id = course_time.course_id \
+      AND course_selection.student_id = ? GROUP BY course_time.course_id;";
+    const [result, fields] = await conn.promise().query(sql, [userId]);
+    conn.release();
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
 module.exports = {
   insertCourse,
   insertCourseTime,
@@ -158,4 +195,5 @@ module.exports = {
   getSpecificCourseInfo,
   insertCourseSelection,
   getCourseSelectionList,
+  getOngoingTeachingCourse,
 };

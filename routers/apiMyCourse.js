@@ -48,6 +48,31 @@ router.get("/teacher", async (req, res) => {
   }
 });
 
+// 取得當下正在進行的課程
+// TODO:
+router.get("/now", async (req, res) => {
+  try {
+    const { weekday, date, time } = req.query;
+    const token = req.headers["authorization"];
+    const decodeTokenResult = tokenDataProcessor.decodeToken(token);
+    let result;
+    if (decodeTokenResult.role == "teacher") {
+      result = await courseDataFetcher.getOngoingTeachingCourse(
+        decodeTokenResult.id,
+        weekday,
+        time,
+        date
+      );
+    }
+    return res.status(200).json({ data: result });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ error: true, message: "cannot connect to database" });
+  }
+});
+
 // 新增選課
 router.post("/student", async (req, res) => {
   const { student_id, student_role_id, course_id } = req.body;
