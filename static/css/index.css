@@ -37,21 +37,6 @@
   display: none;
   align-items: center;
 }
-.enter_room__create_btn {
-  padding: 0 15px;
-  height: 35px;
-  background-color: #afa2ff;
-  border: none;
-  color: #fff;
-  font-size: 18px;
-  font-weight: 400;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.enter_room__create_btn img {
-  width: 15px;
-  margin-left: 5px;
-}
 .enter_room__text {
   margin: 0 20px;
   color: #72788d;
