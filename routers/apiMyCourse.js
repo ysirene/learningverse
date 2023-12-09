@@ -70,4 +70,21 @@ router.post("/student", async (req, res) => {
   }
 });
 
+// 取得選課清單
+router.get("/student", async (req, res) => {
+  try {
+    const token = req.headers["authorization"];
+    const decodeTokenResult = tokenDataProcessor.decodeToken(token);
+    const result = await courseDataFetcher.getCourseSelectionList(
+      decodeTokenResult.id
+    );
+    return res.status(200).json({ data: result });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ error: true, message: "cannot connect to database" });
+  }
+});
+
 module.exports = router;

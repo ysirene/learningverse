@@ -133,6 +133,97 @@ function getTeachingList() {
   });
 }
 
+function getCourseSelectionList() {
+  const src = "/api/myCourse/student";
+  const options = {
+    method: "GET",
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  };
+  ajax(src, options).then((data) => {
+    console.log(data);
+    courseData = data.data;
+    // const leftPanelAttendanceRecordBtn = document.querySelector(
+    //   "#left_panel_attendance_record"
+    // );
+    for (let i = 0; i < data.data.length; i++) {
+      const viewCourseBtn = document.createElement("button");
+      const viewCourseBtnId = "viewCourse" + i;
+      viewCourseBtn.textContent = data.data[i].name;
+      viewCourseBtn.setAttribute("class", "left_panel__sub_btn");
+      viewCourseBtn.setAttribute("id", viewCourseBtnId);
+      viewCourseBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        // 顯示查看課程的頁面
+        const viewMyCourseElem = document.querySelector("#view_my_course");
+        viewMyCourseElem.classList.remove("elem--hide");
+        // 課程名稱
+        const nameElem = document.querySelector("#view__name");
+        nameElem.textContent = data.data[i].name;
+        // 授課教師
+        const teacherNameElem = document.querySelector("#view__teacher_name");
+        teacherNameElem.classList.remove("elem--hide");
+        teacherNameElem.textContent = data.data[i].teacher_name;
+        // 課程代碼
+        const codeElem = document.querySelector("#view__code");
+        codeElem.textContent = data.data[i].room_id;
+        // 課程簡介
+        const introductionElem = document.querySelector("#view__introduction");
+        introductionElem.textContent = data.data[i].introduction;
+        // 授課期間
+        const dateElem = document.querySelector("#view__date");
+        const startDate = new Date(data.data[i].start_date);
+        const formattedStartDate = formatDate(startDate);
+        const endDate = new Date(data.data[i].end_date);
+        const formattedEndDate = formatDate(endDate);
+        dateElem.textContent = formattedStartDate + " ~ " + formattedEndDate;
+        // 上課時間
+        const courseTimeArr = data.data[i].time.split(", ");
+        let timeTextContent = "";
+        const timeTranslate = {
+          morning: "10:00~12:00",
+          afternoon: "14:00~16:00",
+          night: "19:00~21:00",
+        };
+        for (let j = 0; j < courseTimeArr.length; j++) {
+          const timeArr = courseTimeArr[j].split(" ");
+          let tempText = "每周" + timeArr[0] + " " + timeTranslate[timeArr[1]];
+          if (j != courseTimeArr.length - 1) {
+            tempText += "、";
+          }
+          timeTextContent += tempText;
+        }
+        const timeElem = document.querySelector("#view__time");
+        timeElem.textContent = timeTextContent;
+        // 課程大綱
+        const outlineElem = document.querySelector("#view__outline");
+        outlineElem.textContent = data.data[i].outline;
+        // 改標題
+        const mainPanelTitleElem = document.querySelector(".main_panel__title");
+        if (data.data[i].student_role_id == 1) {
+          mainPanelTitleElem.textContent = "我的選課 —— " + data.data[i].name;
+        } else {
+          mainPanelTitleElem.textContent = "我的收藏 —— " + data.data[i].name;
+        }
+      });
+      // append
+      if (data.data[i].student_role_id == 1) {
+        const leftPanelFavoriteBtn = document.querySelector(
+          "#left_panel_favorite_btn"
+        );
+        leftPanelFavoriteBtn.parentNode.insertBefore(
+          viewCourseBtn,
+          leftPanelFavoriteBtn
+        );
+      } else {
+        const leftPanelElem = document.querySelector(".left_panel");
+        leftPanelElem.append(viewCourseBtn);
+      }
+    }
+  });
+}
+
 function renderLeftPanelForTeacher() {
   const leftPanelElem = document.querySelector(".left_panel");
   const leftPanelAddCourseBtn = document.createElement("button");
@@ -175,6 +266,22 @@ function renderLeftPanelForTeacher() {
   );
 }
 
+function renderLeftPanelForStudent() {
+  const leftPanelElem = document.querySelector(".left_panel");
+  const leftPanelCourseSelectionBtn = document.createElement("button");
+  leftPanelCourseSelectionBtn.setAttribute("class", "left_panel__btn");
+  leftPanelCourseSelectionBtn.setAttribute(
+    "id",
+    "left_panel_course_selections_btn"
+  );
+  leftPanelCourseSelectionBtn.textContent = "§ 我的選課";
+  const leftPanelFavoriteBtn = document.createElement("button");
+  leftPanelFavoriteBtn.setAttribute("class", "left_panel__btn");
+  leftPanelFavoriteBtn.setAttribute("id", "left_panel_favorite_btn");
+  leftPanelFavoriteBtn.textContent = "§ 我的收藏";
+  leftPanelElem.append(leftPanelCourseSelectionBtn, leftPanelFavoriteBtn);
+}
+
 function showAddCoursePage() {
   const addCourseBtn = document.querySelector("#left_panel_add_course_btn");
   addCourseBtn.click();
@@ -187,6 +294,9 @@ function showAddCoursePage() {
       renderLeftPanelForTeacher();
       getTeachingList();
       showAddCoursePage();
+    } else {
+      renderLeftPanelForStudent();
+      getCourseSelectionList();
     }
   } catch (err) {
     console.log(err);

@@ -132,6 +132,24 @@ async function insertCourseSelection(student_id, student_role_id, course_id) {
   }
 }
 
+async function getCourseSelectionList(userId) {
+  try {
+    const conn = await getConnection();
+    const sql =
+      "SELECT course_selection.*, \
+      course.name, course.introduction, course.outline, course.room_id, course.deleted, course.image_name, course.start_date, course.end_date, \
+      user.name AS teacher_name, GROUP_CONCAT(CONCAT(course_time.day_of_week,' ',course_time.time) SEPARATOR ', ') AS time \
+      FROM course_selection INNER JOIN course ON course_selection.course_id = course.id INNER JOIN user ON course.teacher_id = user.id INNER JOIN course_time ON course_selection.course_id = course_time.course_id \
+      AND course_selection.student_id = ? GROUP BY course_time.course_id;";
+    const [result, fields] = await conn.promise().query(sql, [userId]);
+    conn.release();
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
 module.exports = {
   insertCourse,
   insertCourseTime,
@@ -139,4 +157,5 @@ module.exports = {
   getCourseInfoForIndexPage,
   getSpecificCourseInfo,
   insertCourseSelection,
+  getCourseSelectionList,
 };
