@@ -64,7 +64,11 @@ router.get("/now", async (req, res) => {
         date
       );
     }
-    return res.status(200).json({ data: result });
+    if (result.length == 0) {
+      return res.status(200).json({ data: null });
+    } else {
+      return res.status(200).json({ data: result[0] });
+    }
   } catch (err) {
     console.log(err);
     return res
