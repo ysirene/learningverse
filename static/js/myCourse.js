@@ -1,6 +1,14 @@
 let userInfo;
-let courseData;
 const token = sessionStorage.getItem("token");
+
+// 將預定課程資料中的日期格式化
+function formatDate(date) {
+  let year = date.getFullYear();
+  let month = (date.getMonth() + 1).toString().padStart(2, "0");
+  let day = date.getDate().toString().padStart(2, "0");
+  let formattedDate = `${year}-${month}-${day}`;
+  return formattedDate;
+}
 
 function authenticateUser() {
   return new Promise((resolve, reject) => {
@@ -81,9 +89,19 @@ function getTeachingList() {
         // 課程名稱
         const nameElem = document.querySelector("#view__name");
         nameElem.textContent = data.data[i].name;
+        // 課程代碼
+        const codeElem = document.querySelector("#view__code");
+        codeElem.textContent = data.data[i].room_id;
         // 課程簡介
         const introductionElem = document.querySelector("#view__introduction");
         introductionElem.textContent = data.data[i].introduction;
+        // 授課期間
+        const dateElem = document.querySelector("#view__date");
+        const startDate = new Date(data.data[i].start_date);
+        const formattedStartDate = formatDate(startDate);
+        const endDate = new Date(data.data[i].end_date);
+        const formattedEndDate = formatDate(endDate);
+        dateElem.textContent = formattedStartDate + " ~ " + formattedEndDate;
         // 上課時間
         const courseTimeArr = data.data[i].time.split(", ");
         let timeTextContent = "";
