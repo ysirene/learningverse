@@ -43,11 +43,11 @@ function toggleUserOption() {
 }
 
 // 跳轉至會員中心
-const memberAreaBtn = document.querySelector("#member_area_btn");
-memberAreaBtn.addEventListener("click", (event) => {
-  event.preventDefault();
-  window.location.href = "/memberArea";
-});
+// const memberAreaBtn = document.querySelector("#member_area_btn");
+// memberAreaBtn.addEventListener("click", (event) => {
+//   event.preventDefault();
+//   window.location.href = "/memberArea";
+// });
 
 // 跳轉至我的課程
 const myCourseBtn = document.querySelector("#my_course_btn");
