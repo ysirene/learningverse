@@ -63,6 +63,13 @@ router.get("/now", async (req, res) => {
         time,
         date
       );
+    } else if (decodeTokenResult.role == "student") {
+      result = await courseDataFetcher.getOngoingCourse(
+        decodeTokenResult.id,
+        weekday,
+        time,
+        date
+      );
     }
     if (result.length == 0) {
       return res.status(200).json({ data: null });
