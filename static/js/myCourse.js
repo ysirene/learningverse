@@ -1,5 +1,6 @@
 let userInfo;
 const token = sessionStorage.getItem("token");
+let courseData;
 
 // 將預定課程資料中的日期格式化
 function formatDate(date) {
@@ -138,6 +139,24 @@ function renderLeftPanelForTeacher() {
   leftPanelAddCourseBtn.setAttribute("class", "left_panel__btn");
   leftPanelAddCourseBtn.setAttribute("id", "left_panel_add_course_btn");
   leftPanelAddCourseBtn.textContent = "§ 建立新課程";
+  leftPanelAddCourseBtn.setAttribute("style", "cursor: pointer");
+  leftPanelAddCourseBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    // 更改標題
+    const mainPanelTitleElem = document.querySelector(".main_panel__title");
+    mainPanelTitleElem.textContent = "建立新課程";
+    // 顯示新增課程的表單
+    const addCourseForm = document.querySelector("#add_course__form");
+    addCourseForm.classList.remove("elem--hide");
+    // 顯示查看課程的頁面
+    const viewMyCourseElem = document.querySelector("#view_my_course");
+    viewMyCourseElem.classList.add("elem--hide");
+    // 清空已選擇的時間
+    // const timeSelectedElem = document.querySelector(".time_selected");
+    // while (timeSelectedElem.hasChildNodes()) {
+    //   timeSelectedElem.removeChild(timeSelectedElem.lastChild);
+    // }
+  });
   const leftPanelViewCourseBtn = document.createElement("button");
   leftPanelViewCourseBtn.setAttribute("class", "left_panel__btn");
   leftPanelViewCourseBtn.setAttribute("id", "left_panel_view_course_btn");
@@ -156,27 +175,6 @@ function renderLeftPanelForTeacher() {
   );
 }
 
-function addClickListenerToLeftPanelButton() {
-  const addCourseBtn = document.querySelector("#left_panel_add_course_btn");
-  addCourseBtn.addEventListener("click", (event) => {
-    event.preventDefault();
-    // 更改標題
-    const mainPanelTitleElem = document.querySelector(".main_panel__title");
-    mainPanelTitleElem.textContent = "建立新課程";
-    // 顯示新增課程的表單
-    const addCourseForm = document.querySelector("#add_course__form");
-    addCourseForm.classList.remove("elem--hide");
-    // 顯示查看課程的頁面
-    const viewMyCourseElem = document.querySelector("#view_my_course");
-    viewMyCourseElem.classList.add("elem--hide");
-    // 清空已選擇的時間
-    // const timeSelectedElem = document.querySelector(".time_selected");
-    // while (timeSelectedElem.hasChildNodes()) {
-    //   timeSelectedElem.removeChild(timeSelectedElem.lastChild);
-    // }
-  });
-}
-
 function showAddCoursePage() {
   const addCourseBtn = document.querySelector("#left_panel_add_course_btn");
   addCourseBtn.click();
@@ -188,7 +186,6 @@ function showAddCoursePage() {
     if (userInfo.role == "teacher") {
       renderLeftPanelForTeacher();
       getTeachingList();
-      addClickListenerToLeftPanelButton();
       showAddCoursePage();
     }
   } catch (err) {
