@@ -175,12 +175,15 @@ const upcomingCourseContainer = document.querySelector(
 const ongoingCourseContainer = document.querySelector(
   "#ongoing_course_container"
 );
+const courseDescriptionElem = document.querySelector(".course_description");
 // 即將上線的課程
 upcomingCourseBtn.addEventListener("click", (event) => {
   ongoingCourseBtn.classList.remove("active");
   ongoingCourseContainer.style.display = "none";
   upcomingCourseBtn.classList.add("active");
   upcomingCourseContainer.style.display = "flex";
+  courseDescriptionElem.textContent =
+    "🚀探索未知，啟航未來！加入我們，成為這場知識冒險的一部分吧！";
 });
 // 正在進行的課程
 ongoingCourseBtn.addEventListener("click", (event) => {
@@ -188,4 +191,6 @@ ongoingCourseBtn.addEventListener("click", (event) => {
   upcomingCourseContainer.style.display = "none";
   ongoingCourseBtn.classList.add("active");
   ongoingCourseContainer.style.display = "flex";
+  courseDescriptionElem.textContent =
+    "📚錯過了第一堂課？別擔心，現在就收藏這門課程並於上課時間發送旁聽請求，你仍然可以加入這場知識的盛宴！";
 });
