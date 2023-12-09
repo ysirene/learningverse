@@ -29,14 +29,6 @@ function authenticateUser() {
           usernameElem.classList.remove("elem--hide");
           userImgElem.setAttribute("src", userImgUrl);
           userImgBtn.classList.remove("elem--hide");
-          if (data.data.role == "student") {
-            const createRoomBtn = document.querySelector(
-              ".enter_room__create_btn"
-            );
-            const orText = document.querySelector(".enter_room__text");
-            createRoomBtn.classList.add("elem--hide");
-            orText.classList.add("elem--hide");
-          }
           enterRoomElem.style.display = "flex";
           sloganBtnElem.classList.add("elem--hide");
         } else {
@@ -157,14 +149,6 @@ function generateRoomId() {
   }
   return roomId;
 }
-
-// 創建新教室
-const createRoomBtn = document.querySelector(".enter_room__create_btn");
-createRoomBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  const roomId = generateRoomId();
-  window.location.href = "/room/" + roomId;
-});
 
 // 課程種類選擇
 const upcomingCourseBtn = document.querySelector("#upcoming_course_btn");
