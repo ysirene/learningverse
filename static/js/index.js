@@ -136,20 +136,6 @@ searchRoomBtn.addEventListener("click", (e) => {
   window.location.href = url;
 });
 
-// 隨機產生roomId
-function generateRoomId() {
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-  let roomId = "";
-  for (let i = 0; i < 9; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    roomId += characters.charAt(randomIndex);
-    if ((i + 1) % 3 === 0 && i !== 8) {
-      roomId += "-";
-    }
-  }
-  return roomId;
-}
-
 // 課程種類選擇
 const upcomingCourseBtn = document.querySelector("#upcoming_course_btn");
 const ongoingCourseBtn = document.querySelector("#ongoing_course_btn");
