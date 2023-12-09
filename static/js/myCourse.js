@@ -112,9 +112,9 @@ function getTeachingList() {
         const courseTimeArr = data.data[i].time.split(", ");
         let timeTextContent = "";
         const timeTranslate = {
-          morning: "10:00~12:00",
-          afternoon: "14:00~16:00",
-          night: "19:00~21:00",
+          morning: "9:00~12:00",
+          afternoon: "14:00~17:00",
+          night: "19:00~22:00",
         };
         for (let j = 0; j < courseTimeArr.length; j++) {
           const timeArr = courseTimeArr[j].split(" ");
@@ -183,9 +183,9 @@ function getCourseSelectionList() {
         const courseTimeArr = data.data[i].time.split(", ");
         let timeTextContent = "";
         const timeTranslate = {
-          morning: "10:00~12:00",
-          afternoon: "14:00~16:00",
-          night: "19:00~21:00",
+          morning: "9:00~12:00",
+          afternoon: "14:00~17:00",
+          night: "19:00~22:00",
         };
         for (let j = 0; j < courseTimeArr.length; j++) {
           const timeArr = courseTimeArr[j].split(" ");
@@ -345,9 +345,9 @@ addCourseForm.addEventListener("submit", (event) => {
   }
   const timeSelectedArray = [];
   const timeTranslate = {
-    "10:00~12:00": "morning",
-    "14:00~16:00": "afternoon",
-    "19:00~21:00": "night",
+    "9:00~12:00": "morning",
+    "14:00~17:00": "afternoon",
+    "19:00~22:00": "night",
   };
   for (let i = 0; i < timeSelectedElem.length; i++) {
     const tempArray = [

@@ -92,9 +92,9 @@ function getCourseInfo() {
     const courseTimeArr = data.data.time.split(", ");
     let timeTextContent = "";
     const timeTranslate = {
-      morning: "10:00~12:00",
-      afternoon: "14:00~16:00",
-      night: "19:00~21:00",
+      morning: "9:00~12:00",
+      afternoon: "14:00~17:00",
+      night: "19:00~22:00",
     };
     for (let i = 0; i < courseTimeArr.length; i++) {
       const timeArr = courseTimeArr[i].split(" ");

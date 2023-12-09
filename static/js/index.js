@@ -134,11 +134,11 @@ function showCourseNotification() {
   const now = new Date();
   const hour = now.getHours();
   let time;
-  if (hour >= 10 && hour < 12) {
+  if (hour >= 9 && hour < 12) {
     time = "morning";
-  } else if (hour >= 14 && hour < 16) {
+  } else if (hour >= 14 && hour < 17) {
     time = "afternoon";
-  } else if (hour >= 19 && hour < 21) {
+  } else if (hour >= 19 && hour < 22) {
     time = "night";
   } else {
     return;
