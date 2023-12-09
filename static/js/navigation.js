@@ -1,13 +1,13 @@
 // 將星期幾轉換為中文
 function translateDay(num) {
   let dayDic = {
-    1: "週一",
-    2: "週二",
-    3: "週三",
-    4: "週四",
-    5: "週五",
-    6: "週六",
-    0: "週日",
+    1: "一",
+    2: "二",
+    3: "三",
+    4: "四",
+    5: "五",
+    6: "六",
+    0: "日",
   };
   return dayDic[num];
 }
@@ -31,7 +31,7 @@ function startTime() {
   weekday = translateDay(weekday);
   minute = checkTime(minute);
   document.querySelector(".nav__time").textContent =
-    hour + ":" + minute + " | " + month + "月" + date + "日 " + weekday;
+    hour + ":" + minute + " | " + month + "月" + date + "日 週" + weekday;
   setTimeout(startTime, 1000);
 }
 
