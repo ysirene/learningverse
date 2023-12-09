@@ -283,8 +283,8 @@ function startTime() {
 function registerPeer(userId, myName, myImg) {
   peer = new Peer(userId, {
     host: "/",
-    port: "9000",
-    // secure: true,
+    port: "443",
+    secure: true,
   });
   peer.on("open", (userId) => {
     // 傳送join-room訊息server
