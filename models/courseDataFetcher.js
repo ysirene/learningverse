@@ -156,7 +156,7 @@ async function getOngoingTeachingCourse(userId, weekday, time, date) {
     const conn = await getConnection();
     const data = [userId, date, date, weekday, time];
     const sql =
-      "SELECT course.* FROM course INNER JOIN course_time ON course.id = course_time.course_id \
+      "SELECT course.name, course.room_id FROM course INNER JOIN course_time ON course.id = course_time.course_id \
       AND course.teacher_id = ? AND course.deleted = 0 AND ? > course.start_date AND ? < course.end_date \
       AND course_time.day_of_week = ? AND course_time.time = ?";
     const [result, fields] = await conn.promise().query(sql, data);
@@ -169,7 +169,7 @@ async function getOngoingTeachingCourse(userId, weekday, time, date) {
 }
 
 // 學生取得現在正在進行的課程（for渲染通知在首頁）
-async function getOngoingCourse(userId, weekday) {
+async function getOngoingCourse(userId, weekday, time, date) {
   try {
     const conn = await getConnection();
     const sql =
