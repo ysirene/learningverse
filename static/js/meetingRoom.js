@@ -10,7 +10,26 @@ let peer;
 // 從prepareRoom切換到meetingRoom
 const enterMeetingRoomBtn = document.querySelector(".confirm__btn");
 enterMeetingRoomBtn.addEventListener("click", (event) => {
-  event.preventDefault();
+  if (studentRole == 2) {
+    const confirmBtn = document.querySelector(".confirm__btn");
+    const loadingBtn = document.querySelector(".confirm__btn--loading");
+    confirmBtn.setAttribute("style", "display: none");
+    loadingBtn.setAttribute("style", "display: block");
+    socket.emit(
+      "join-room",
+      roomId,
+      userInfo.id,
+      userInfo.name,
+      userInfo.img,
+      myCameraStatus
+    );
+    return;
+  } else if (studentRole == 1) {
+    enterMeetingRoom();
+  }
+});
+
+function enterMeetingRoom() {
   // 清除prepareRoom的HTML
   while (mainElem.firstChild) {
     mainElem.removeChild(mainElem.lastChild);
@@ -27,7 +46,7 @@ enterMeetingRoomBtn.addEventListener("click", (event) => {
   renderRoomId();
   startTime();
   registerPeer(userInfo.id, userInfo.name, userInfo.img);
-});
+}
 
 // 渲染meetingRoom畫面
 function renderRoomPage() {
@@ -285,12 +304,14 @@ function startTime() {
 function registerPeer(userId, myName, myImg) {
   peer = new Peer(userId, {
     host: "/",
-    port: "443",
-    secure: true,
+    port: "9000",
+    // secure: true,
   });
   peer.on("open", (userId) => {
     // 傳送join-room訊息server
-    socket.emit("join-room", roomId, userId, myName, myImg, myCameraStatus);
+    if (studentRole == 1) {
+      socket.emit("join-room", roomId, userId, myName, myImg, myCameraStatus);
+    }
 
     // 如果有人call我，就傳送我的視訊和音訊
     peer.on("call", (call) => {
