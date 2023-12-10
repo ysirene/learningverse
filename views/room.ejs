@@ -7,6 +7,10 @@
     <link rel="stylesheet" type="text/css" href="/css/navigation.css" />
     <link rel="stylesheet" type="text/css" href="/css/footer.css" />
     <link rel="stylesheet" type="text/css" href="/css/prepareRoom.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
     <!-- <link rel="stylesheet" type="text/css" href="/css/meetingRoom.css" /> -->
     <link rel="shortcut icon" href="/image/logo.png" />
     <title>Learningverse</title>
@@ -35,8 +39,13 @@
         </div>
         <div class="confirm">
           <div class="confirm__text">準備好了嗎？</div>
-          <button class="confirm__btn">
-            <img src="/image/enter.png" />進入教室
+          <button class="confirm__btn" style="display: block">
+            <img src="/image/enter.png" /><span id="confirm__btn_text"
+              >進入教室</span
+            >
+          </button>
+          <button class="confirm__btn--loading" style="display: none" disabled>
+            <i class="fa fa-spinner fa-spin"></i> 請稍後
           </button>
         </div>
       </section>

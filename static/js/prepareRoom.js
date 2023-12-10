@@ -1,47 +1,74 @@
+const token = sessionStorage.getItem("token");
 let myStream;
 let myCameraStatus = true;
 let myMicrophoneStatus = true;
 let userInfo;
+let studentRole;
 
 // 驗證登入狀態
 function authenticateUser() {
-  if (sessionStorage.getItem("token")) {
-    let token = sessionStorage.getItem("token");
-    let src = "/api/user/auth";
-    let options = {
+  return new Promise((resolve, reject) => {
+    if (token) {
+      let src = "/api/user/auth";
+      let options = {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      };
+      ajax(src, options)
+        .then((data) => {
+          if (data.data != null) {
+            userInfo = data.data;
+            const usernameElem = document.querySelector("#nav__username");
+            const userImgElem = document.querySelector("#nav__user_img");
+            const userImgBtn = document.querySelector(".nav__user_img");
+            const userImgUrl =
+              "https://d277hbzet0a7g8.cloudfront.net/userImage/" +
+              data.data.img;
+            const roleTranslate = {
+              teacher: "老師",
+              student: "同學",
+            };
+            usernameElem.textContent =
+              data.data.name + " " + roleTranslate[data.data.role];
+            usernameElem.classList.remove("elem--hide");
+            userImgElem.setAttribute("src", userImgUrl);
+            userImgBtn.classList.remove("elem--hide");
+            resolve();
+          } else {
+            window.location.href = "/";
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      window.location.href = "/";
+    }
+  });
+}
+
+function checkStudentRole() {
+  return new Promise((resolve, reject) => {
+    const roomId = window.location.pathname.split("/")[2];
+    const src = "/api/myCourse/studentRole?roomId=" + roomId;
+    const options = {
       method: "GET",
       headers: {
         authorization: `Bearer ${token}`,
       },
     };
-    ajax(src, options)
-      .then((data) => {
-        if (data.data != null) {
-          userInfo = data.data;
-          const usernameElem = document.querySelector("#nav__username");
-          const userImgElem = document.querySelector("#nav__user_img");
-          const userImgBtn = document.querySelector(".nav__user_img");
-          const userImgUrl =
-            "https://d277hbzet0a7g8.cloudfront.net/userImage/" + data.data.img;
-          const roleTranslate = {
-            teacher: "老師",
-            student: "同學",
-          };
-          usernameElem.textContent =
-            data.data.name + " " + roleTranslate[data.data.role];
-          usernameElem.classList.remove("elem--hide");
-          userImgElem.setAttribute("src", userImgUrl);
-          userImgBtn.classList.remove("elem--hide");
-        } else {
-          window.location.href = "/";
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  } else {
-    window.location.href = "/";
-  }
+    ajax(src, options).then((data) => {
+      console.log(data);
+      studentRole = data.data.student_role_id;
+      if (studentRole == 2) {
+        const confirmBtn = document.querySelector("#confirm__btn_text");
+        confirmBtn.textContent = "請求旁聽";
+      }
+    });
+    resolve();
+  });
 }
 
 function getMediaPermission() {
@@ -72,6 +99,9 @@ function getMediaPermission() {
 (async function runPrepareRoom() {
   try {
     await authenticateUser(); // 驗證會員
+    if (userInfo.role == "student") {
+      await checkStudentRole();
+    }
     await getMediaPermission(); // 顯示預覽視訊
   } catch (err) {
     console.log(err);
