@@ -254,7 +254,10 @@ function renderLeftPanelForTeacher() {
   leftPanelViewCourseBtn.setAttribute("id", "left_panel_view_course_btn");
   leftPanelViewCourseBtn.textContent = "§ 查看我的課程";
   const leftPanelAttendanceRecordBtn = document.createElement("button");
-  leftPanelAttendanceRecordBtn.setAttribute("class", "left_panel__btn");
+  leftPanelAttendanceRecordBtn.setAttribute(
+    "class",
+    "left_panel__btn elem--hide"
+  );
   leftPanelAttendanceRecordBtn.setAttribute(
     "id",
     "left_panel_attendance_record"
