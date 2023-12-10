@@ -55,7 +55,7 @@ function authenticateUser() {
 
 // 取得課程資訊
 function getCourseInfo() {
-  const src = "/api/course/" + courseId;
+  const src = "/api/course/courseId/" + courseId;
   const options = {
     method: "GET",
   };
