@@ -18,6 +18,8 @@ enterMeetingRoomBtn.addEventListener("click", (event) => {
   // 將prepareRoom.css改成meetingRoom.css
   const prepareRoomCssLink = document.getElementsByTagName("link")[3];
   prepareRoomCssLink.setAttribute("href", "/css/meetingRoom.css");
+  const body = document.getElementsByTagName("body")[0];
+  body.classList.remove("body--normal");
   // 渲染meetingRoom前端切版
   renderRoomPage();
   addMyVideoStream(myStream, userInfo.name, userInfo.id, myCameraStatus);
