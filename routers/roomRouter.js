@@ -52,9 +52,9 @@ io.on("connection", (socket) => {
         }
       }
 
-      socket.on("accept-enter", (userId) => {
-        console.log(userId + "收到允許了！");
-        io.in(roomId).to(userId).emit("get-enter-accept");
+      socket.on("accept-enter", (auditId) => {
+        console.log(auditId + "收到允許了！");
+        io.in(roomId).to(auditId).emit("get-enter-accept", auditId);
       });
 
       socket.on("ready", (userId) => {
@@ -66,7 +66,7 @@ io.on("connection", (socket) => {
 
       socket.on("reject-enter", (auditId) => {
         console.log(auditId + "旁聽被拒");
-        io.in(roomId).to(auditId).emit("get-enter-reject");
+        io.in(roomId).to(auditId).emit("get-enter-reject", auditId);
       });
 
       // 離開之前的房間

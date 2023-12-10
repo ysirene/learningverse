@@ -24,17 +24,22 @@ enterMeetingRoomBtn.addEventListener("click", (event) => {
       userInfo.img,
       myCameraStatus
     );
-    socket.on("get-enter-accept", () => {
-      enterMeetingRoom();
+    socket.on("get-enter-accept", (auditId) => {
+      if (auditId == userInfo.id) {
+        enterMeetingRoom();
+      }
     });
-    socket.on("get-enter-reject", () => {
-      socket.disconnect();
-      const loadingBtn = document.querySelector(".confirm__btn--loading");
-      const rejectMsg = document.querySelector(".reject_msg");
-      loadingBtn.setAttribute("style", "display: none");
-      rejectMsg.classList.remove("elem--hide");
+    socket.on("get-enter-reject", (auditId) => {
+      if (auditId == userInfo.id) {
+        socket.disconnect();
+        const loadingBtn = document.querySelector(".confirm__btn--loading");
+        const rejectMsg = document.querySelector(".reject_msg");
+        loadingBtn.setAttribute("style", "display: none");
+        rejectMsg.classList.remove("elem--hide");
+      }
     });
   } else if (classRole == 1 || classRole == 3) {
+    console.log("classRole == 1 || classRole == 3");
     enterMeetingRoom();
     if (classRole == 3) {
       socket.on("enter-request", (userId, userName) => {
@@ -448,6 +453,7 @@ function registerPeer(userId, myName, myImg) {
     port: "9000",
     // secure: true,
   });
+  console.log(peer);
   peer.on("open", (userId) => {
     // 傳送join-room訊息server
     if (classRole == 1 || classRole == 3) {
@@ -603,6 +609,7 @@ function connectedToNewUser(
   const options = {
     metadata: { name: myName, id: myId, img: myImg, camera: myCameraStatus },
   };
+  console.log(peer);
   const call = peer.call(userId, mystream, options);
   // 當對方回覆他的視訊和音訊給我時，我要將他的畫面加到我的HTML中
   call.on("stream", (userVideoStream) => {
