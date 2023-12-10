@@ -103,6 +103,13 @@ body {
   font-size: 20px;
   margin-bottom: 15px;
 }
+.right_panel__course_content {
+  height: calc(100% - 50px);
+  overflow-y: scroll;
+}
+.right_panel__course_content div {
+  margin-bottom: 10px;
+}
 .right_panel__msg_content {
   height: calc(100% - 98px);
   overflow-y: scroll;

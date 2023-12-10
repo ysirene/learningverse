@@ -4,8 +4,10 @@ const socket = io("/");
 const peers = [];
 let showMsgPanel = false;
 let showParticipantPanel = false;
+let showCourseInfoPanel = false;
 // let handsUp = false;
 let peer;
+let courseInfo;
 
 // 從prepareRoom切換到meetingRoom
 const enterMeetingRoomBtn = document.querySelector(".confirm__btn");
@@ -65,7 +67,7 @@ enterMeetingRoomBtn.addEventListener("click", (event) => {
   }
 });
 
-function enterMeetingRoom() {
+async function enterMeetingRoom() {
   // 清除prepareRoom的HTML
   while (mainElem.firstChild) {
     mainElem.removeChild(mainElem.lastChild);
@@ -76,12 +78,36 @@ function enterMeetingRoom() {
   const body = document.getElementsByTagName("body")[0];
   body.classList.remove("body--normal");
   // 渲染meetingRoom前端切版
+  await getCourseInfo();
   renderRoomPage();
   addMyVideoStream(myStream, userInfo.name, userInfo.id, myCameraStatus);
   addToParticipantLst(userInfo.name, userInfo.id, userInfo.img);
   renderRoomId();
   startTime();
   registerPeer(userInfo.id, userInfo.name, userInfo.img);
+}
+
+function getCourseInfo() {
+  return new Promise((resolve, reject) => {
+    const src = "/api/course/roomId/" + roomId;
+    const options = {
+      method: "GET",
+    };
+    ajax(src, options).then((data) => {
+      courseInfo = data.data;
+      console.log(courseInfo);
+      resolve();
+    });
+  });
+}
+
+// 將課程資料中的日期格式化
+function formatDate(date) {
+  let year = date.getFullYear();
+  let month = (date.getMonth() + 1).toString().padStart(2, "0");
+  let day = date.getDate().toString().padStart(2, "0");
+  let formattedDate = `${year}-${month}-${day}`;
+  return formattedDate;
 }
 
 // 渲染meetingRoom畫面
@@ -159,10 +185,68 @@ function renderRoomPage() {
     rightPanelParticipantTitle,
     rightPanelParticipantContent
   );
+  // 上方區塊--課程資訊
+  const rightPanelCourseInfoDiv = document.createElement("div");
+  rightPanelCourseInfoDiv.setAttribute("class", "right_panel elem--hide");
+  rightPanelCourseInfoDiv.setAttribute("id", "right_panel_course_info");
+  const rightPanelCourseInfoTitle = document.createElement("div");
+  rightPanelCourseInfoTitle.setAttribute("class", "right_panel__title");
+  rightPanelCourseInfoTitle.textContent = "課程資訊";
+  const rightPanelCourseInfoContent = document.createElement("div");
+  rightPanelCourseInfoContent.setAttribute(
+    "class",
+    "right_panel__course_content scrollbar"
+  );
+  const courseNameDiv = document.createElement("div"); // 課程名稱
+  courseNameDiv.textContent = "課程名稱：" + courseInfo.name;
+  const courseRoomIdDiv = document.createElement("div"); // 課程代碼
+  courseRoomIdDiv.textContent = "課程代碼：" + courseInfo.room_id;
+  const courseTeacherNameDiv = document.createElement("div"); // 教師姓名
+  courseTeacherNameDiv.textContent = "授課教師：" + courseInfo.teacher_name;
+  const startDate = new Date(courseInfo.start_date);
+  const formattedStartDate = formatDate(startDate);
+  const endDate = new Date(courseInfo.end_date);
+  const formattedEndDate = formatDate(endDate);
+  const courseDateDiv = document.createElement("div"); // 授課期間
+  courseDateDiv.textContent =
+    "授課期間：" + formattedStartDate + " ~ " + formattedEndDate;
+  const courseTimeArr = courseInfo.time.split(", ");
+  let timeTextContent = "";
+  const timeTranslate = {
+    morning: "9:00~12:00",
+    afternoon: "14:00~17:00",
+    night: "19:00~22:00",
+  };
+  for (let i = 0; i < courseTimeArr.length; i++) {
+    const timeArr = courseTimeArr[i].split(" ");
+    let tempText = "每周" + timeArr[0] + " " + timeTranslate[timeArr[1]];
+    if (i != courseTimeArr.length - 1) {
+      tempText += "、";
+    }
+    timeTextContent += tempText;
+  }
+  const courseTimeDiv = document.createElement("div"); // 上課時間
+  courseTimeDiv.textContent = "上課時間：" + timeTextContent;
+  const courseIntroductionDiv = document.createElement("div"); // 課程簡介
+  courseIntroductionDiv.textContent = "課程簡介：" + courseInfo.introduction;
+  rightPanelCourseInfoContent.append(
+    courseNameDiv,
+    courseRoomIdDiv,
+    courseTeacherNameDiv,
+    courseDateDiv,
+    courseTimeDiv,
+    courseIntroductionDiv
+  );
+  rightPanelCourseInfoDiv.append(
+    rightPanelCourseInfoTitle,
+    rightPanelCourseInfoContent
+  );
+
   upperSpaceSection.append(
     videoContainerDiv,
     rightPanelMsgDiv,
-    rightPanelParticipantDiv
+    rightPanelParticipantDiv,
+    rightPanelCourseInfoDiv
   );
   // 下方的工具列
   const taskbarSection = document.createElement("section");
@@ -269,10 +353,12 @@ function renderRoomPage() {
   // 下方的工具列--右
   const taskbarMinorFunctionDiv = document.createElement("div");
   taskbarMinorFunctionDiv.setAttribute("class", "taskbar__minor_function");
-  const taskbarMinorFunctionMsgBtn = document.createElement("button");
-  taskbarMinorFunctionMsgBtn.setAttribute("class", "btn__msg");
-  taskbarMinorFunctionMsgBtn.addEventListener("click", (event) => {
-    event.preventDefault();
+  const taskbarMinorFunctionCourseInfoBtn = document.createElement("button");
+  taskbarMinorFunctionCourseInfoBtn.setAttribute("class", "btn__info");
+  taskbarMinorFunctionCourseInfoBtn.addEventListener("click", () => {
+    const courseInfoPanelElem = document.querySelector(
+      "#right_panel_course_info"
+    );
     const participantPanelElem = document.querySelector(
       "#right_panel_participant"
     );
@@ -281,17 +367,48 @@ function renderRoomPage() {
       participantPanelElem.classList.toggle("elem--hide");
       showParticipantPanel = false;
     }
+    if (showMsgPanel) {
+      msgPanelElem.classList.toggle("elem--hide");
+      showMsgPanel = false;
+    }
+    courseInfoPanelElem.classList.toggle("elem--hide");
+    showCourseInfoPanel = !showCourseInfoPanel;
+  });
+  const taskbarMinorFunctionMsgBtn = document.createElement("button");
+  taskbarMinorFunctionMsgBtn.setAttribute("class", "btn__msg");
+  taskbarMinorFunctionMsgBtn.addEventListener("click", () => {
+    const courseInfoPanelElem = document.querySelector(
+      "#right_panel_course_info"
+    );
+    const participantPanelElem = document.querySelector(
+      "#right_panel_participant"
+    );
+    const msgPanelElem = document.querySelector("#right_panel__msg");
+    if (showParticipantPanel) {
+      participantPanelElem.classList.toggle("elem--hide");
+      showParticipantPanel = false;
+    }
+    if (showCourseInfoPanel) {
+      courseInfoPanelElem.classList.toggle("elem--hide");
+      showCourseInfoPanel = false;
+    }
     msgPanelElem.classList.toggle("elem--hide");
     showMsgPanel = !showMsgPanel;
   });
   const taskbarMinorFunctionParticipantBtn = document.createElement("button");
   taskbarMinorFunctionParticipantBtn.setAttribute("class", "btn__participant");
-  taskbarMinorFunctionParticipantBtn.addEventListener("click", (event) => {
-    event.preventDefault();
+  taskbarMinorFunctionParticipantBtn.addEventListener("click", () => {
+    const courseInfoPanelElem = document.querySelector(
+      "#right_panel_course_info"
+    );
     const participantPanelElem = document.querySelector(
       "#right_panel_participant"
     );
     const msgPanelElem = document.querySelector("#right_panel__msg");
+    if (showCourseInfoPanel) {
+      courseInfoPanelElem.classList.toggle("elem--hide");
+      showCourseInfoPanel = false;
+    }
     if (showMsgPanel) {
       msgPanelElem.classList.toggle("elem--hide");
       showMsgPanel = false;
@@ -299,12 +416,12 @@ function renderRoomPage() {
     participantPanelElem.classList.toggle("elem--hide");
     showParticipantPanel = !showParticipantPanel;
   });
-  const taskbarMinorFunctionLotteryBtn = document.createElement("button");
-  taskbarMinorFunctionLotteryBtn.setAttribute("class", "btn__lottery");
+  // const taskbarMinorFunctionLotteryBtn = document.createElement("button");
+  // taskbarMinorFunctionLotteryBtn.setAttribute("class", "btn__lottery");
   taskbarMinorFunctionDiv.append(
+    taskbarMinorFunctionCourseInfoBtn,
     taskbarMinorFunctionMsgBtn,
-    taskbarMinorFunctionParticipantBtn,
-    taskbarMinorFunctionLotteryBtn
+    taskbarMinorFunctionParticipantBtn
   );
 
   taskbarSection.append(

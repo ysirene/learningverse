@@ -118,6 +118,21 @@ async function getSpecificCourseInfo(courseId) {
   }
 }
 
+async function getSpecificCourseInfoByRoomId(roomId) {
+  try {
+    const conn = await getConnection();
+    const sql =
+      "SELECT course.*, user.name AS teacher_name, user.image_name AS teacher_image, GROUP_CONCAT(CONCAT(course_time.day_of_week,' ',course_time.time) SEPARATOR ', ') AS time \
+      FROM course INNER JOIN user ON course.teacher_id = user.id  INNER JOIN course_time ON course.id = course_time.course_id AND course.room_id = ? GROUP BY course_time.course_id";
+    const [result, fields] = await conn.promise().query(sql, [roomId]);
+    conn.release();
+    return result[0];
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
 async function insertCourseSelection(student_id, student_role_id, course_id) {
   try {
     const conn = await getConnection();
@@ -241,6 +256,7 @@ module.exports = {
   getTeachingList,
   getCourseInfoForIndexPage,
   getSpecificCourseInfo,
+  getSpecificCourseInfoByRoomId,
   insertCourseSelection,
   getCourseSelectionList,
   getOngoingTeachingCourse,
