@@ -189,18 +189,31 @@ async function getOngoingCourse(userId, weekday, time, date) {
   }
 }
 
-// 學生取在課程中的身分別
+// 取在課程中的身分別
 async function getClassRole(userId, roomId) {
   try {
     const conn = await getConnection();
     const data = [userId, roomId];
-    const sql =
+    // 判斷是否為老師
+    let sql = "SELECT * FROM course WHERE teacher_id = ? AND room_id = ?";
+    let [result, fields] = await conn.promise().query(sql, data);
+    if (result.length == 1) {
+      conn.release();
+      return 3;
+    }
+    // 若不是老師，則判斷學生的種類
+    sql =
       "SELECT course_selection.student_role_id FROM course_selection \
       INNER JOIN course ON course_selection.course_id = course.id \
       AND course_selection.student_id = ? AND course.room_id = ?";
-    const [result, fields] = await conn.promise().query(sql, data);
-    conn.release();
-    return result;
+    [result, fields] = await conn.promise().query(sql, data);
+    if (result.length == 1) {
+      conn.release();
+      return result[0]["student_role_id"];
+    } else {
+      conn.release();
+      return 4;
+    }
   } catch (err) {
     console.log(err);
     throw err;

@@ -10,7 +10,7 @@ let peer;
 // 從prepareRoom切換到meetingRoom
 const enterMeetingRoomBtn = document.querySelector(".confirm__btn");
 enterMeetingRoomBtn.addEventListener("click", (event) => {
-  if (studentRole == 2) {
+  if (classRole == 2 || classRole == 4) {
     const confirmBtn = document.querySelector(".confirm__btn");
     const loadingBtn = document.querySelector(".confirm__btn--loading");
     confirmBtn.setAttribute("style", "display: none");
@@ -23,9 +23,45 @@ enterMeetingRoomBtn.addEventListener("click", (event) => {
       userInfo.img,
       myCameraStatus
     );
-    return;
-  } else if (studentRole == 1) {
+    socket.on("get-enter-accept", () => {
+      enterMeetingRoom();
+    });
+    socket.on("get-enter-reject", () => {
+      socket.disconnect();
+      const loadingBtn = document.querySelector(".confirm__btn--loading");
+      const rejectMsg = document.querySelector(".reject_msg");
+      loadingBtn.setAttribute("style", "display: none");
+      rejectMsg.classList.remove("elem--hide");
+    });
+  } else if (classRole == 1 || classRole == 3) {
     enterMeetingRoom();
+    if (classRole == 3) {
+      socket.on("enter-request", (userId, userName) => {
+        console.log(userName + "請求旁聽");
+        const promptDiv = document.createElement("div");
+        promptDiv.setAttribute("class", "prompt");
+        const promptTitleDiv = document.createElement("div");
+        promptTitleDiv.textContent = userName + " 請求旁聽";
+        const btnContainer = document.createElement("div");
+        btnContainer.setAttribute("class", "prompt__btn_container");
+        const acceptBtn = document.createElement("button");
+        acceptBtn.textContent = "接受";
+        acceptBtn.addEventListener("click", () => {
+          socket.emit("accept-enter", userId);
+          promptDiv.remove();
+        });
+        const rejectBtn = document.createElement("button");
+        rejectBtn.textContent = "拒絕";
+        rejectBtn.addEventListener("click", () => {
+          socket.emit("reject-enter", userId);
+          promptDiv.remove();
+        });
+        btnContainer.append(acceptBtn, rejectBtn);
+        promptDiv.append(promptTitleDiv, btnContainer);
+        const promptContainerElem = document.querySelector(".prompt_container");
+        promptContainerElem.append(promptDiv);
+      });
+    }
   }
 });
 
@@ -56,6 +92,10 @@ function renderRoomPage() {
   // 上方區塊--視訊
   const videoContainerDiv = document.createElement("div");
   videoContainerDiv.setAttribute("class", "video_container");
+  // 請求旁聽的訊息框
+  const promptContainerDiv = document.createElement("div");
+  promptContainerDiv.setAttribute("class", "prompt_container");
+  videoContainerDiv.append(promptContainerDiv);
   // 上方區塊--文字訊息
   const rightPanelMsgDiv = document.createElement("div");
   rightPanelMsgDiv.setAttribute("class", "right_panel elem--hide");
@@ -309,7 +349,7 @@ function registerPeer(userId, myName, myImg) {
   });
   peer.on("open", (userId) => {
     // 傳送join-room訊息server
-    if (studentRole == 1) {
+    if (classRole == 1 || classRole == 3) {
       socket.emit("join-room", roomId, userId, myName, myImg, myCameraStatus);
     }
 

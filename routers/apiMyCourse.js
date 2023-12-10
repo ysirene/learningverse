@@ -122,8 +122,8 @@ router.get("/student", async (req, res) => {
   }
 });
 
-// 取得學生在課程中的身分（正式選課或旁聽）
-router.get("/studentRole", async (req, res) => {
+// 取得使用者在課程中的身分（1:正式選課、2:旁聽、3:老師、4:查無此人）
+router.get("/classRole", async (req, res) => {
   try {
     const token = req.headers["authorization"];
     const decodeTokenResult = tokenDataProcessor.decodeToken(token);
@@ -132,11 +132,7 @@ router.get("/studentRole", async (req, res) => {
       decodeTokenResult.id,
       roomId
     );
-    if (result.length == 0) {
-      return res.status(200).json({ data: null });
-    } else {
-      return res.status(200).json({ data: result[0] });
-    }
+    return res.status(200).json({ data: { classRole: result } });
   } catch (err) {
     console.log(err);
     return res

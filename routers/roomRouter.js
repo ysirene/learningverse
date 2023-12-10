@@ -28,15 +28,42 @@ io.on("connection", (socket) => {
         instructorId = result.teacher_id;
         instructorOfClass.roomId = instructorId;
       }
-      // 如果用戶不是授課老師，就確認學生身分別
+
+      // 用戶是授課老師→直接進入會議室；用戶不是授課老師→確認學生是否為正式選課的學生
       let studentRole = null;
-      if (userId != instructorId) {
+      if (userId == instructorId) {
+        // 通知有新的使用者進房間
+        socket
+          .to(roomId)
+          .emit("user-connected", userId, userName, userImg, cameraStatus);
+      } else {
         studentRole = await courseDataFetcher.getClassRole(userId, roomId);
+        // 如果學生為正式選課，則直接進入房間
+        if (studentRole == 1) {
+          // 通知有新的使用者進房間
+          socket
+            .to(roomId)
+            .emit("user-connected", userId, userName, userImg, cameraStatus);
+        } else {
+          io.in(roomId)
+            .to(instructorId)
+            .emit("enter-request", userId, userName);
+          console.log("發送請求旁聽給" + instructorId);
+        }
       }
-      // 如果學生為旁聽生，則發送旁聽請求
-      if (studentRole == 2) {
-        io.to(instructorId).emit("enter-request", userId);
-      }
+
+      socket.on("accept-enter", (auditId) => {
+        console.log(auditId + "收到允許了！");
+        io.in(roomId).to(auditId).emit("get-enter-accept");
+        socket
+          .to(roomId)
+          .emit("user-connected", userId, userName, userImg, cameraStatus);
+      });
+
+      socket.on("reject-enter", (auditId) => {
+        console.log(auditId + "旁聽被拒");
+        io.in(roomId).to(auditId).emit("get-enter-reject");
+      });
 
       // 離開之前的房間
       const previousRoomId = userInRooms[userId];
@@ -49,11 +76,6 @@ io.on("connection", (socket) => {
       //讓socket進入房間，可以接收到該房間的通知
       socket.join(roomId);
       userInRooms[userId] = roomId;
-
-      // 通知有新的使用者進房間
-      socket
-        .to(roomId)
-        .emit("user-connected", userId, userName, userImg, cameraStatus);
 
       // 鏡頭開關→顯示或隱藏遮罩
       socket.on("camera-status-change", (userId) => {

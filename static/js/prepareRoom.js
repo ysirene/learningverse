@@ -3,7 +3,7 @@ let myStream;
 let myCameraStatus = true;
 let myMicrophoneStatus = true;
 let userInfo;
-let studentRole;
+let classRole;
 
 // 驗證登入狀態
 function authenticateUser() {
@@ -49,10 +49,10 @@ function authenticateUser() {
   });
 }
 
-function checkStudentRole() {
+function checkClassRole() {
   return new Promise((resolve, reject) => {
     const roomId = window.location.pathname.split("/")[2];
-    const src = "/api/myCourse/studentRole?roomId=" + roomId;
+    const src = "/api/myCourse/classRole?roomId=" + roomId;
     const options = {
       method: "GET",
       headers: {
@@ -61,8 +61,9 @@ function checkStudentRole() {
     };
     ajax(src, options).then((data) => {
       console.log(data);
-      studentRole = data.data.student_role_id;
-      if (studentRole == 2) {
+      // role編號的意義：1-正式選課、2-旁聽、3-老師、4-查無此人
+      classRole = data.data.classRole;
+      if (classRole == 2 || classRole == 4) {
         const confirmBtn = document.querySelector("#confirm__btn_text");
         confirmBtn.textContent = "請求旁聽";
       }
@@ -99,9 +100,7 @@ function getMediaPermission() {
 (async function runPrepareRoom() {
   try {
     await authenticateUser(); // 驗證會員
-    if (userInfo.role == "student") {
-      await checkStudentRole();
-    }
+    await checkClassRole(); // 確認在課堂中的身分
     await getMediaPermission(); // 顯示預覽視訊
   } catch (err) {
     console.log(err);
