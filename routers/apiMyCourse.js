@@ -49,7 +49,6 @@ router.get("/teacher", async (req, res) => {
 });
 
 // 取得當下正在進行的課程
-// TODO:
 router.get("/now", async (req, res) => {
   try {
     const { weekday, date, time } = req.query;
@@ -115,6 +114,29 @@ router.get("/student", async (req, res) => {
       decodeTokenResult.id
     );
     return res.status(200).json({ data: result });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ error: true, message: "cannot connect to database" });
+  }
+});
+
+// 取得學生在課程中的身分（正式選課或旁聽）
+router.get("/studentRole", async (req, res) => {
+  try {
+    const token = req.headers["authorization"];
+    const decodeTokenResult = tokenDataProcessor.decodeToken(token);
+    const { roomId } = req.query;
+    const result = await courseDataFetcher.getClassRole(
+      decodeTokenResult.id,
+      roomId
+    );
+    if (result.length == 0) {
+      return res.status(200).json({ data: null });
+    } else {
+      return res.status(200).json({ data: result[0] });
+    }
   } catch (err) {
     console.log(err);
     return res
