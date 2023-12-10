@@ -7,7 +7,6 @@ let showParticipantPanel = false;
 let showCourseInfoPanel = false;
 // let handsUp = false;
 let peer;
-let courseInfo;
 
 // 從prepareRoom切換到meetingRoom
 const enterMeetingRoomBtn = document.querySelector(".confirm__btn");
@@ -67,7 +66,7 @@ enterMeetingRoomBtn.addEventListener("click", (event) => {
   }
 });
 
-async function enterMeetingRoom() {
+function enterMeetingRoom() {
   // 清除prepareRoom的HTML
   while (mainElem.firstChild) {
     mainElem.removeChild(mainElem.lastChild);
@@ -78,27 +77,12 @@ async function enterMeetingRoom() {
   const body = document.getElementsByTagName("body")[0];
   body.classList.remove("body--normal");
   // 渲染meetingRoom前端切版
-  await getCourseInfo();
   renderRoomPage();
   addMyVideoStream(myStream, userInfo.name, userInfo.id, myCameraStatus);
   addToParticipantLst(userInfo.name, userInfo.id, userInfo.img);
   renderRoomId();
   startTime();
   registerPeer(userInfo.id, userInfo.name, userInfo.img);
-}
-
-function getCourseInfo() {
-  return new Promise((resolve, reject) => {
-    const src = "/api/course/roomId/" + roomId;
-    const options = {
-      method: "GET",
-    };
-    ajax(src, options).then((data) => {
-      courseInfo = data.data;
-      console.log(courseInfo);
-      resolve();
-    });
-  });
 }
 
 // 將課程資料中的日期格式化
@@ -468,6 +452,8 @@ function registerPeer(userId, myName, myImg) {
     // 傳送join-room訊息server
     if (classRole == 1 || classRole == 3) {
       socket.emit("join-room", roomId, userId, myName, myImg, myCameraStatus);
+    } else {
+      socket.emit("ready", userId);
     }
 
     // 如果有人call我，就傳送我的視訊和音訊
@@ -641,16 +627,18 @@ function connectedToNewUser(
 
 // 有人加入會議室時要取得peer連線
 socket.on("user-connected", (userId, userName, userImg, cameraStatus) => {
-  connectedToNewUser(
-    userId,
-    userName,
-    userImg,
-    myStream,
-    userInfo.id,
-    userInfo.name,
-    userInfo.img,
-    cameraStatus
-  );
+  if (userId != userInfo.id) {
+    connectedToNewUser(
+      userId,
+      userName,
+      userImg,
+      myStream,
+      userInfo.id,
+      userInfo.name,
+      userInfo.img,
+      cameraStatus
+    );
+  }
 });
 // 有人關鏡頭
 socket.on("toggle-video-mask", (userId) => {

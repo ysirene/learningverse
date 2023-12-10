@@ -40,7 +40,7 @@ io.on("connection", (socket) => {
         studentRole = await courseDataFetcher.getClassRole(userId, roomId);
         // 如果學生為正式選課，則直接進入房間
         if (studentRole == 1) {
-          // 通知有新的使用者進房間
+          // 通知有新的使用者進房間1
           socket
             .to(roomId)
             .emit("user-connected", userId, userName, userImg, cameraStatus);
@@ -52,9 +52,13 @@ io.on("connection", (socket) => {
         }
       }
 
-      socket.on("accept-enter", (auditId) => {
-        console.log(auditId + "收到允許了！");
-        io.in(roomId).to(auditId).emit("get-enter-accept");
+      socket.on("accept-enter", (userId) => {
+        console.log(userId + "收到允許了！");
+        io.in(roomId).to(userId).emit("get-enter-accept");
+      });
+
+      socket.on("ready", (userId) => {
+        // 通知有新的使用者進房間2
         socket
           .to(roomId)
           .emit("user-connected", userId, userName, userImg, cameraStatus);
