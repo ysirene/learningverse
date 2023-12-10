@@ -335,8 +335,8 @@ function renderRoomPage() {
     taskbarMainFunctionMicOffBtn,
     taskbarMainFunctionCameraOnBtn,
     taskbarMainFunctionCameraOffBtn,
-    taskbarMainFunctionRaiseHandBtn,
-    taskbarMainFunctionShareScreenBtn,
+    // taskbarMainFunctionRaiseHandBtn,
+    // taskbarMainFunctionShareScreenBtn,
     taskbarMainFunctionLeaveBtn
   );
   // 下方的工具列--右
