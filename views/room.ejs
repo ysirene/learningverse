@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="/css/navigation.css" />
+    <link rel="stylesheet" type="text/css" href="/css/footer.css" />
+    <link rel="stylesheet" type="text/css" href="/css/prepareRoom.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <!-- <link rel="stylesheet" type="text/css" href="/css/meetingRoom.css" /> -->
+    <link rel="shortcut icon" href="/image/logo.png" />
+    <title>Learningverse</title>
+  </head>
+  <body class="body--normal">
+    <main>
+      <%- include("partials/navigation") %> <%- include("partials/member") %>
+      <section class="container">
+        <div class="media_control">
+          <video id="previewMyVideo"></video>
+          <div class="media_control__setting">
+            <button
+              class="btn__microphone--off elem--hide"
+              id="prepare__microphone--off"
+            ></button>
+            <button
+              class="btn__microphone--on"
+              id="prepare__microphone--on"
+            ></button>
+            <button
+              class="btn__camera--off elem--hide"
+              id="prepare__camera--off"
+            ></button>
+            <button class="btn__camera--on" id="prepare__camera--on"></button>
+          </div>
+        </div>
+        <div class="confirm">
+          <div class="confirm__text">準備好了嗎？</div>
+          <button class="confirm__btn" style="display: block">
+            <img src="/image/enter.png" /><span id="confirm__btn_text"
+              >進入教室</span
+            >
+          </button>
+          <button class="confirm__btn--loading" style="display: none" disabled>
+            <i class="fa fa-spinner fa-spin"></i> 請稍後
+          </button>
+          <div class="reject_msg elem--hide">
+            不好意思，您的旁聽請求被拒絕了╥﹏╥
+          </div>
+        </div>
+      </section>
+      <%- include("partials/footer") %>
+    </main>
+    <script src="/socket.io/socket.io.js" defer></script>
+    <script
+      src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"
+      defer
+    ></script>
+    <script type="text/javascript" src="/js/navigation.js" defer></script>
+    <script type="text/javascript" src="/js/ajax.js" defer></script>
+    <script type="text/javascript" src="/js/prepareRoom.js" defer></script>
+    <script type="text/javascript" src="/js/meetingRoom.js" defer></script>
+  </body>
+</html>

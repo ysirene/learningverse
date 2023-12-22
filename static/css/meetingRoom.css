@@ -1,0 +1,258 @@
+body {
+  margin: 0;
+  min-height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  background-color: black;
+}
+.upper_space {
+  height: calc(100vh - 80px);
+  width: 95%;
+  margin: 0 auto;
+  display: flex;
+}
+.video_container {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 16px 8px 0px;
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+}
+.user_container {
+  margin: 10px;
+  position: relative;
+  flex: 1 1 300px;
+  border-radius: 5px;
+}
+.user_container__name {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  margin: 5px;
+  color: #fff;
+  font-size: 16px;
+}
+.user_container__video {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  border-radius: 10px;
+}
+.user_container__mask {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background-color: #3c3c3c;
+}
+.prompt_container {
+  height: calc(100% - 36px);
+  width: 200px;
+  display: flex;
+  flex-direction: column-reverse;
+  position: absolute;
+  bottom: 10px;
+  right: 18px;
+  z-index: 500;
+}
+.prompt {
+  width: 100%;
+  margin: 10px 0;
+  background-color: #fff;
+  border-radius: 10px;
+}
+.prompt div {
+  font-size: 18px;
+  text-align: center;
+  font-weight: 500;
+}
+.prompt__btn_container {
+  display: flex;
+  padding: 5px 30px;
+  justify-content: space-around;
+}
+.prompt__btn_container button {
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
+  padding: 3px 10px;
+  border-radius: 5px;
+}
+.prompt button:hover {
+  background-color: #e8e8e8;
+}
+.right_panel {
+  height: calc(100% - 36px);
+  width: 450px;
+  box-sizing: border-box;
+  background-color: #fff;
+  border-radius: 10px;
+  margin: 26px 8px 10px;
+  padding: 15px;
+  font-size: 14px;
+}
+.right_panel__title {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+.right_panel__course_content {
+  height: calc(100% - 50px);
+  overflow-y: scroll;
+}
+.right_panel__course_content div {
+  margin-bottom: 10px;
+}
+.right_panel__msg_content {
+  height: calc(100% - 98px);
+  overflow-y: scroll;
+}
+.right_panel__msg_content div {
+  padding-bottom: 10px;
+}
+.msg_content__time {
+  color: #404e4d;
+  margin-left: 10px;
+}
+.send_msg__form {
+  position: relative;
+}
+.send_msg__input {
+  height: 48px;
+  width: calc(100% - 30px);
+  margin: 0 auto;
+  padding: 0 15px;
+  border-radius: 50px;
+  border: none;
+  background-color: rgb(244, 243, 243);
+}
+.send_msg__btn {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
+  right: 0;
+}
+.send_msg__btn:hover {
+  background-color: rgb(223, 222, 222);
+}
+.send_msg__icon {
+  width: 50%;
+  height: 50%;
+}
+.right_panel__user_img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+.right_panel__participantContent {
+  height: calc(100% - 50px);
+  overflow-y: scroll;
+}
+.participant__info {
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
+}
+.participant__info span {
+  padding-left: 10px;
+}
+.taskbar {
+  box-sizing: border-box;
+  padding: 0 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  width: 100%;
+}
+.taskbar__info {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+}
+.info__item {
+  margin: 0 5px;
+}
+.taskbar__main_function {
+  width: 300px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.taskbar__main_function button {
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  background-size: 30px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  border: none;
+  background-color: transparent;
+}
+
+.taskbar__minor_function {
+  width: 180px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.taskbar__minor_function button {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background-size: 25px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  border: none;
+  background-color: transparent;
+}
+.taskbar__minor_function button:hover,
+.taskbar__main_function button:hover {
+  background-color: #404e4d;
+}
+.btn__microphone--on {
+  background-image: url(/image/microphone_light.png);
+}
+.btn__microphone--off {
+  background-image: url(/image/microphone-slash-red.png);
+}
+.btn__camera--on {
+  background-image: url(/image/webcam_light.png);
+}
+.btn__camera--off {
+  background-image: url(/image/webcam-slash-red.png);
+}
+.btn__raise_hand {
+  border: #fff 2px solid;
+  background-image: url(/image/raise-hand.png);
+}
+.btn__shear_screen {
+  background-image: url(/image/arrow-square-up-bold.png);
+}
+.btn__leave_room {
+  background-image: url(/image/phone-cross.png);
+}
+.btn__info {
+  background-image: url(/image/info.png);
+}
+.btn__msg {
+  background-image: url(/image/message.png);
+}
+.btn__participant {
+  background-image: url(/image/users.png);
+}
+.btn__lottery {
+  background-image: url(/image/dice.png);
+}

@@ -1,0 +1,45 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap");
+
+body,
+input,
+button {
+  font-family: "Noto Sans TC", sans-serif;
+}
+
+a:link {
+  text-decoration: none;
+}
+a:visited {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+}
+a:active {
+  text-decoration: none;
+}
+
+.elem--hide {
+  display: none;
+}
+.elem--block {
+  display: block;
+}
+.elem--invisible {
+  visibility: hidden;
+}
+
+.scrollbar {
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #72788d;
+  }
+}

@@ -1,0 +1,125 @@
+.body--normal {
+  margin: 55px 0 0;
+}
+.body--more_space {
+  margin: 100px 0 0;
+}
+.nav__background--top {
+  position: fixed;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  background-color: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  box-shadow: 0px 5px 5px -5px #aeaeae;
+  padding: 0;
+  height: 55px;
+  width: 100%;
+  z-index: 500;
+}
+.nav__background--space {
+  position: fixed;
+  top: 45px;
+  display: flex;
+  justify-content: center;
+  background-color: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  box-shadow: 0px 5px 5px -5px #aeaeae;
+  padding: 0;
+  height: 55px;
+  width: 100%;
+  z-index: 500;
+}
+.nav--top {
+  position: fixed;
+  top: 0;
+  width: 1200px;
+  height: 55px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 501;
+}
+.nav--space {
+  position: fixed;
+  top: 45px;
+  width: 1200px;
+  height: 55px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 501;
+}
+.nav__logo {
+  width: auto;
+}
+.nav__logo a {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.logo__img {
+  display: block;
+  height: 35px;
+}
+.logo__name {
+  padding-left: 10px;
+  font-size: 30px;
+  font-weight: 700;
+  color: #404e4d;
+}
+.nav__menu {
+  position: relative;
+  width: auto;
+  display: flex;
+  align-items: center;
+}
+.nav__time {
+  color: #404e4d;
+  font-size: 20px;
+  font-weight: 500;
+  padding-right: 10px;
+}
+.nav__signin {
+  padding: 10px;
+  background-color: #fff;
+  border: none;
+  color: #404e4d;
+  font-size: 20px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.nav__user_img {
+  padding: 0;
+  height: 35px;
+  width: 35px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+.nav__user_img img {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+}
+.nav__user_options {
+  position: absolute;
+  top: 60px;
+  right: 10px;
+  width: 120px;
+  padding: 10px 0;
+  background-color: #fff;
+  border-radius: 5px;
+  border: 1px solid #72788d;
+}
+.user_options__btn {
+  display: block;
+  margin: 0 auto 10px;
+  background-color: #fff;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+.user_options__btn:hover {
+  color: #afa2ff;
+}

@@ -1,0 +1,99 @@
+main {
+  width: 1200px;
+  margin: 0 auto;
+  padding: 40px 0;
+}
+.brief_info {
+  width: 95%;
+  display: flex;
+  margin: 0 auto;
+  justify-content: space-between;
+}
+.brief__img_container {
+  display: flex;
+  align-items: center;
+  width: calc(50% - 15px);
+  height: 350px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+.brief__img_container img {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.brief__text_container {
+  width: calc(50% - 15px);
+  height: 350px;
+}
+.teacher_info {
+  display: flex;
+  align-items: center;
+}
+.text__teacher_img {
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+}
+.text__teacher_name {
+  font-size: 16px;
+  color: #404e4d;
+  line-height: 24px;
+  margin-left: 5px;
+}
+.text__course_name {
+  padding-bottom: 10px;
+  font-size: 35px;
+  font-weight: 500;
+}
+.text__course_introduction {
+  padding-bottom: 20px;
+  font-size: 16px;
+  line-height: 26px;
+  color: #404e4d;
+}
+.text__course_time {
+  padding-bottom: 5px;
+}
+.text__btn {
+  margin-top: 20px;
+  padding: 5px 15px;
+  background-color: #afa2ff;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 400;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.separator {
+  border: none;
+  width: 1200px;
+  height: 1px;
+  background-color: #e8e8e8;
+  margin: 30px auto;
+}
+.outline {
+  width: 95%;
+  margin: 0 auto;
+}
+.outline__title {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.outline__context {
+  font-size: 16px;
+  white-space: pre-line;
+}
+.reminder--error {
+  padding-left: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  color: red;
+}
+.reminder--success {
+  padding-left: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  color: green;
+}

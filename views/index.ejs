@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="/css/navigation.css" />
+    <link rel="stylesheet" type="text/css" href="/css/member.css" />
+    <link rel="stylesheet" type="text/css" href="/css/footer.css" />
+    <link rel="stylesheet" type="text/css" href="/css/index.css" />
+    <link rel="shortcut icon" href="/image/logo.png" />
+    <title>Learningverse</title>
+  </head>
+  <body class="scrollbar body--normal">
+    <div class="class_reminder" style="display: none">
+      <div class="class_reminder__title"></div>
+      <div class="class_reminder__text">開始上課囉！</div>
+      <button class="class_reminder__btn">進入教室</button>
+    </div>
+    <%- include("partials/navigation") %> <%- include("partials/member") %>
+    <header class="header_container">
+      <section class="slogan">
+        <div class="slogan__title">開啟知識的大門<br />處處皆學堂</div>
+        <div class="slogan__body">
+          聚焦學習，忘卻距離，<br />探索未知的學習之旅。
+        </div>
+        <button class="slogan__signin_btn" onclick="toggleSigninSignup()">
+          登入/註冊
+        </button>
+        <section class="enter_room">
+          <form id="search_room">
+            <input
+              class="enter_room__search_input"
+              type="text"
+              placeholder="輸入教室代碼"
+              required
+            />
+            <button class="enter_room__search_btn">進入</button>
+          </form>
+        </section>
+      </section>
+      <section class="pictures__frame">
+        <img src="/image/online-education-1.png" class="pictures__1" />
+        <img src="/image/online-education-2.png" class="pictures__2" />
+        <img src="/image/online-education-3.png" class="pictures__3" />
+      </section>
+    </header>
+    <hr class="separator" />
+    <ul class="course_menu">
+      <li class="active" id="upcoming_course_btn">即將上線的課程</li>
+      <li id="ongoing_course_btn">正在進行的課程</li>
+    </ul>
+    <main>
+      <div class="course_description">
+        🚀探索未知，啟航未來！加入我們，成為這場知識冒險的一部分吧！
+      </div>
+      <section
+        class="courses_container"
+        id="upcoming_course_container"
+        style="display: flex"
+      ></section>
+      <section
+        class="courses_container"
+        id="ongoing_course_container"
+        style="display: none"
+      ></section>
+    </main>
+    <%- include("partials/footer") %>
+    <script type="text/javascript" src="/js/navigation.js"></script>
+    <script type="text/javascript" src="/js/ajax.js"></script>
+    <script type="text/javascript" src="/js/member.js"></script>
+    <script type="text/javascript" src="/js/index.js"></script>
+  </body>
+</html>

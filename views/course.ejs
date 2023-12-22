@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="/css/navigation.css" />
+    <link rel="stylesheet" type="text/css" href="/css/member.css" />
+    <link rel="stylesheet" type="text/css" href="/css/footer.css" />
+    <link rel="stylesheet" type="text/css" href="/css/course.css" />
+    <link rel="shortcut icon" href="/image/logo.png" />
+    <title>Learningverse</title>
+  </head>
+  <body class="scrollbar body--normal">
+    <%- include("partials/navigation") %> <%- include("partials/member") %>
+    <main>
+      <section class="brief_info">
+        <div class="brief__img_container">
+          <img id="course_img" />
+        </div>
+        <div class="brief__text_container">
+          <div class="teacher_info">
+            <img class="text__teacher_img" />
+            <div class="text__teacher_name"></div>
+          </div>
+          <div class="text__course_name"></div>
+          <div class="text__course_introduction"></div>
+          <div class="text__course_time">
+            授課期間：<span id="course_date"></span>
+          </div>
+          <div class="text__course_time">
+            上課時間：<span id="course_time"> </span>
+          </div>
+          <button id="enroll_btn" class="text__btn elem--hide">
+            手刀報名！
+          </button>
+          <button id="audit_btn" class="text__btn elem--hide">加入收藏</button
+          ><span id="apply_result" class="elem--hide"></span>
+        </div>
+      </section>
+      <hr class="separator" />
+      <section class="outline">
+        <div class="outline__title">課程大綱</div>
+        <div class="outline__context"></div>
+      </section>
+    </main>
+
+    <%- include("partials/footer") %>
+    <script type="text/javascript" src="/js/navigation.js"></script>
+    <script type="text/javascript" src="/js/ajax.js"></script>
+    <script type="text/javascript" src="/js/member.js"></script>
+    <script type="text/javascript" src="/js/course.js"></script>
+  </body>
+</html>

@@ -1,0 +1,94 @@
+.container {
+  width: 1200px;
+  height: calc(100vh - 115px);
+  min-height: 450px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.media_control {
+  width: 60%;
+}
+.media_control video {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  transform: scaleX(-1);
+  border-radius: 10px;
+}
+.media_control__setting {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.media_control__setting button {
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  margin: 0 10px;
+  background-size: 30px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  border: none;
+  background-color: transparent;
+}
+.btn__microphone--on {
+  background-image: url(/image/microphone.png);
+}
+.btn__microphone--off {
+  background-image: url(/image/microphone-slash-red.png);
+}
+.btn__camera--on {
+  background-image: url(/image/webcam.png);
+}
+.btn__camera--off {
+  background-image: url(/image/webcam-slash-red.png);
+}
+.confirm {
+  width: 40%;
+}
+.confirm__text {
+  margin: 0 auto;
+  font-size: 30px;
+  text-align: center;
+}
+.confirm__btn {
+  width: 145px;
+  height: 40px;
+  padding: 5px 15px;
+  margin: 20px auto 0;
+  background-color: #afa2ff;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 400;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.confirm__btn--loading {
+  width: 145px;
+  height: 40px;
+  padding: 5px 15px;
+  margin: 20px auto 0;
+  background-color: #aeaeae;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 400;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.confirm__btn img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+.reject_msg {
+  color: red;
+  font-size: 18px;
+  text-align: center;
+  font-weight: 500;
+  margin: 20px 0;
+}
