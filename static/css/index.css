@@ -86,27 +86,14 @@
   cursor: pointer;
 }
 .pictures__frame {
+  display: flex;
   height: 350px;
   width: 45%;
-  position: relative;
 }
-.pictures__1 {
-  position: absolute;
-  width: 140px;
-  top: 8%;
-  left: 55%;
-}
-.pictures__2 {
-  position: absolute;
-  width: 180px;
-  top: 30%;
-  left: 20%;
-}
-.pictures__3 {
-  position: absolute;
-  width: 150px;
-  top: 49%;
-  left: 63%;
+.pictures__frame img {
+  height: 90%;
+  margin: auto;
+  display: block;
 }
 .separator {
   border: none;
