@@ -150,7 +150,10 @@ function renderRoomPage() {
   });
   const rightPanelMsgSubmitIcon = document.createElement("img");
   rightPanelMsgSubmitIcon.setAttribute("class", "send_msg__icon");
-  rightPanelMsgSubmitIcon.setAttribute("src", "/image/send.png");
+  rightPanelMsgSubmitIcon.setAttribute(
+    "src",
+    "https://d277hbzet0a7g8.cloudfront.net/icon/send.png"
+  );
   rightPanelMsgSubmitBtn.append(rightPanelMsgSubmitIcon);
   rightPanelMsgForm.append(rightPanelMsgInput, rightPanelMsgSubmitBtn);
   rightPanelMsgDiv.append(
@@ -336,7 +339,7 @@ function renderRoomPage() {
     taskbarMainFunctionCameraOnBtn,
     taskbarMainFunctionCameraOffBtn,
     // taskbarMainFunctionRaiseHandBtn,
-    // taskbarMainFunctionShareScreenBtn,
+    taskbarMainFunctionShareScreenBtn,
     taskbarMainFunctionLeaveBtn
   );
   // 下方的工具列--右

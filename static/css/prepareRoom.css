@@ -34,16 +34,16 @@
   background-color: transparent;
 }
 .btn__microphone--on {
-  background-image: url(/image/microphone.png);
+  background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/microphone.png);
 }
 .btn__microphone--off {
-  background-image: url(/image/microphone-slash-red.png);
+  background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/microphone-cross.png);
 }
 .btn__camera--on {
-  background-image: url(/image/webcam.png);
+  background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/webcam.png);
 }
 .btn__camera--off {
-  background-image: url(/image/webcam-slash-red.png);
+  background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/webcam-cross.png);
 }
 .confirm {
   width: 40%;
