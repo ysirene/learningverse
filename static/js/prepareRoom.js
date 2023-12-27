@@ -107,6 +107,10 @@ function getCourseInfo() {
     ajax(src, options).then((data) => {
       courseInfo = data.data;
       console.log(courseInfo);
+      if (courseInfo == undefined) {
+        alert("課程代碼不正確，請檢查後再輸入一次");
+        window.location.href = "/";
+      }
       resolve();
     });
   });
@@ -115,7 +119,7 @@ function getCourseInfo() {
 (async function runPrepareRoom() {
   try {
     await authenticateUser(); // 驗證會員
-    await await getCourseInfo();
+    await getCourseInfo();
     await checkClassRole(); // 確認在課堂中的身分
     await getMediaPermission(); // 顯示預覽視訊
   } catch (err) {
