@@ -61,10 +61,8 @@ function checkClassRole() {
       },
     };
     ajax(src, options).then((data) => {
-      console.log(data);
-      // role編號的意義：1-正式選課、2-旁聽、3-老師、4-查無此人
       classRole = data.data.classRole;
-      if (classRole == 2 || classRole == 4) {
+      if (classRole == "audit" || classRole == "others") {
         const confirmBtn = document.querySelector("#confirm__btn_text");
         confirmBtn.textContent = "請求旁聽";
       }
@@ -106,7 +104,6 @@ function getCourseInfo() {
     };
     ajax(src, options).then((data) => {
       courseInfo = data.data;
-      console.log(courseInfo);
       if (courseInfo == undefined) {
         alert("課程代碼不正確，請檢查後再輸入一次");
         window.location.href = "/";
