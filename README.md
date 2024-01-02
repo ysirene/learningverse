@@ -8,16 +8,39 @@
 
 👨‍💻 Testing Account:
 
-- Account 1 (being a teacher)
+- Account 1 (as a teacher)
 
   - Email: teacher@test.com
   - password: teacher
 
-- Account 2 (being a student)
+- Account 2 (as a student)
   - Email: student@test.com
   - password: student
 
 ## Main Feature
+
+- As a teacher, user can create your own courses.
+  ![create course image](static/image/demo/create_course.gif)
+
+- As a student, user can select or bookmark courses.
+  ![register course image](static/image/demo/select_course.gif)
+  ![bookmark course image](static/image/demo/bookmark_course.gif)
+
+- Show class notifications on the homepage.
+  ![class notification image](static/image/demo/class_notification.JPG)
+
+- Control access to video conference rooms based on the account identity.
+
+  - If the user is the instructor or the student in the class, then he or she can enter the conference room directly.
+  - Otherwise, the user needs to obtain permission from the instructor before entering the conference room.
+
+- Use `Socket.IO` and `PeerJS` to achieve real-time video conferencing.
+  ![entry request image](static/image/demo/entry_request.gif)
+
+- Use `Socket.IO` to achieve real-time text chat.
+  ![text chat image](static/image/demo/text_message.gif)
+
+- Use connection pool to Connect to the database.
 
 ## Architecture
 
@@ -51,9 +74,11 @@
 - AJAX
 - WebRTC: PeerJS
 
-### Other
+### Tools
 
-- Version Control: Git/Github
+- Git/Github
+- Eslint
+- Prettier
 
 ## Database Schema
 
