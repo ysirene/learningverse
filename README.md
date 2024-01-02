@@ -19,10 +19,10 @@
 
 ## Main Feature
 
-- As a teacher, user can create your own courses.
+- As a teacher, you can create your own courses.
   ![create course image](static/image/demo/create_course.gif)
 
-- As a student, user can select or bookmark courses.
+- As a student, you can select or bookmark courses.
   ![register course image](static/image/demo/select_course.gif)
   ![bookmark course image](static/image/demo/bookmark_course.gif)
 
@@ -40,7 +40,7 @@
 - Use `Socket.IO` to achieve real-time text chat.
   ![text chat image](static/image/demo/text_message.gif)
 
-- Use connection pool to Connect to the database.
+- Use connection pool to connect to the database.
 
 ## Architecture
 
