@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
+const tokenDataProcessor = require("../dataHandling/tokenDataProcessor");
 const courseDataFetcher = require("../models/courseDataFetcher");
 
 const socket = require("socket.io");
@@ -10,93 +11,76 @@ router.get("/:roomId", (req, res) => {
   res.render("room");
 });
 
-const userInRooms = {}; //用於追蹤使用者所在的room
-const instructorOfClass = {}; // 用於儲存授課老師的資料
+const instructorOfClass = {}; // 用於儲存與追蹤授課老師
 
 io.on("connection", (socket) => {
-  socket.on(
-    "join-room",
-    async (roomId, userId, userName, userImg, cameraStatus) => {
-      console.log("有新朋友！", roomId, userId);
+  socket.on("join-room", async (roomId, userId, token, cameraStatus) => {
+    const userInfo = await tokenDataProcessor.decodeToken(token);
+    const tokenUserId = userInfo.id;
+    const userName = userInfo.name;
+    const userImg = userInfo.img;
+    const socketId = socket.id;
+    console.log(userInfo.id, userInfo.name, "進入", roomId, "會議室");
 
-      // 取得授課老師的userId
-      let instructorId;
-      if (roomId in instructorOfClass) {
-        instructorId = instructorOfClass.roomId;
-      } else {
-        const result = await courseDataFetcher.getTeacherId(roomId);
-        instructorId = result.teacher_id;
-        instructorOfClass.roomId = instructorId;
-      }
-
-      // 用戶是授課老師→直接進入會議室；用戶不是授課老師→確認學生是否為正式選課的學生
-      let studentRole = null;
-      if (userId == instructorId) {
-        // 通知有新的使用者進房間
-        socket
-          .to(roomId)
-          .emit("user-connected", userId, userName, userImg, cameraStatus);
-      } else {
-        studentRole = await courseDataFetcher.getClassRole(userId, roomId);
-        // 如果學生為正式選課，則直接進入房間
-        if (studentRole == 1) {
-          // 通知有新的使用者進房間1
-          socket
-            .to(roomId)
-            .emit("user-connected", userId, userName, userImg, cameraStatus);
-        } else {
-          io.in(roomId)
-            .to(instructorId)
-            .emit("enter-request", userId, userName);
-          console.log("發送請求旁聽給" + instructorId);
-        }
-      }
-
-      socket.on("accept-enter", (auditId) => {
-        console.log(auditId + "收到允許了！");
-        io.in(roomId).to(auditId).emit("get-enter-accept", auditId);
-      });
-
-      socket.on("ready", (userId) => {
-        // 通知有新的使用者進房間2
-        socket
-          .to(roomId)
-          .emit("user-connected", userId, userName, userImg, cameraStatus);
-      });
-
-      socket.on("reject-enter", (auditId) => {
-        console.log(auditId + "旁聽被拒");
-        io.in(roomId).to(auditId).emit("get-enter-reject", auditId);
-      });
-
-      // 離開之前的房間
-      const previousRoomId = userInRooms[userId];
-      if (previousRoomId) {
-        socket.leave(previousRoomId); //不再接收舊房間的通知
-        socket.broadcast.to(previousRoomId).emit("user-disconnected", userId);
-        console.log(userId + "離開" + previousRoomId);
-      }
-
-      //讓socket進入房間，可以接收到該房間的通知
-      socket.join(roomId);
-      userInRooms[userId] = roomId;
-
-      // 鏡頭開關→顯示或隱藏遮罩
-      socket.on("camera-status-change", (userId) => {
-        io.in(roomId).emit("toggle-video-mask", userId);
-      });
-
-      // 接收與傳送文字訊息
-      socket.on("send-msg", (roomId, userName, time, msgText) => {
-        io.in(roomId).emit("receive-msg", userName, time, msgText);
-      });
-
-      socket.on("disconnect", () => {
-        console.log(userId + "離開" + roomId);
-        delete userInRooms[userId];
-      });
+    if (tokenUserId != userId) {
+      const msg = "會員驗證有誤，請重新登入後再試一次";
+      socket.emit("entry-failed", msg);
     }
-  );
+
+    // 用戶是授課老師或正式選課的學生→直接進入會議室；否則請求進入
+    const classRole = await courseDataFetcher.getClassRole(userId, roomId);
+    if (classRole == "instructor") {
+      instructorOfClass[roomId] = socketId; //儲存授課老師的id
+    }
+    if (classRole == "assurance" || classRole == "instructor") {
+      socket
+        .to(roomId)
+        .emit("user-connected", userId, userName, userImg, cameraStatus);
+    } else {
+      if (roomId in instructorOfClass) {
+        io.to(instructorOfClass[roomId]).emit(
+          "enter-request",
+          userName,
+          socketId
+        );
+      } else {
+        const msg = "授課老師不在線上，請稍後再發送旁聽請求";
+        socket.emit("entry-failed", msg);
+      }
+    }
+
+    socket.on("accept-enter", (userSocketId) => {
+      io.to(userSocketId).emit("get-enter-accept");
+    });
+
+    socket.on("ready", (userId) => {
+      socket
+        .to(roomId)
+        .emit("user-connected", userId, userName, userImg, cameraStatus);
+    });
+
+    socket.on("reject-enter", (userSocketId) => {
+      io.to(userSocketId).emit("get-enter-reject");
+    });
+
+    socket.join(roomId);
+
+    socket.on("camera-status-change", (userId) => {
+      io.in(roomId).emit("toggle-video-mask", userId);
+    });
+
+    socket.on("send-msg", (roomId, userName, time, msgText) => {
+      io.in(roomId).emit("receive-msg", userName, time, msgText);
+    });
+
+    socket.on("disconnect", () => {
+      console.log(userInfo.id, userInfo.name, "離開", roomId, "會議室");
+      if (classRole == "instructor") {
+        delete instructorOfClass[roomId];
+      }
+      socket.to(roomId).emit("user-disconnected", userInfo.id);
+    });
+  });
 });
 
 module.exports = router;

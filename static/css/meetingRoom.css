@@ -223,36 +223,29 @@ body {
   background-color: #404e4d;
 }
 .btn__microphone--on {
-  background-image: url(/image/microphone_light.png);
+  background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/microphone_light.png);
 }
 .btn__microphone--off {
-  background-image: url(/image/microphone-slash-red.png);
+  background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/microphone-cross.png);
 }
 .btn__camera--on {
-  background-image: url(/image/webcam_light.png);
+  background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/webcam_light.png);
 }
 .btn__camera--off {
-  background-image: url(/image/webcam-slash-red.png);
-}
-.btn__raise_hand {
-  border: #fff 2px solid;
-  background-image: url(/image/raise-hand.png);
+  background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/webcam-cross.png);
 }
 .btn__shear_screen {
-  background-image: url(/image/arrow-square-up-bold.png);
+  background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/sharescreen.png);
 }
 .btn__leave_room {
-  background-image: url(/image/phone-cross.png);
+  background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/phone-cross.png);
 }
 .btn__info {
-  background-image: url(/image/info.png);
+  background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/info.png);
 }
 .btn__msg {
-  background-image: url(/image/message.png);
+  background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/message.png);
 }
 .btn__participant {
-  background-image: url(/image/users.png);
-}
-.btn__lottery {
-  background-image: url(/image/dice.png);
+  background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/users.png);
 }

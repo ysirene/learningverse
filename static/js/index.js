@@ -193,7 +193,7 @@ const searchRoomBtn = document.querySelector(".enter_room__search_btn");
 searchRoomBtn.addEventListener("click", (e) => {
   e.preventDefault();
   const formInput = document.querySelector(".enter_room__search_input");
-  const roomId = formInput.value;
+  const roomId = formInput.value.trim();
   const url = "/room/" + roomId;
   window.location.href = url;
 });

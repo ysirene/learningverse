@@ -214,20 +214,21 @@ async function getClassRole(userId, roomId) {
     let [result, fields] = await conn.promise().query(sql, data);
     if (result.length == 1) {
       conn.release();
-      return 3;
+      return "instructor";
     }
     // 若不是老師，則判斷學生的種類
     sql =
-      "SELECT course_selection.student_role_id FROM course_selection \
+      "SELECT student_role.type FROM student_role \
+      INNER JOIN course_selection ON student_role.id = course_selection.student_role_id \
       INNER JOIN course ON course_selection.course_id = course.id \
       AND course_selection.student_id = ? AND course.room_id = ?";
     [result, fields] = await conn.promise().query(sql, data);
     if (result.length == 1) {
       conn.release();
-      return result[0]["student_role_id"];
+      return result[0]["type"];
     } else {
       conn.release();
-      return 4;
+      return "others";
     }
   } catch (err) {
     console.log(err);
