@@ -2,9 +2,12 @@ const mainElem = document.getElementsByTagName("main")[0];
 const roomId = window.location.pathname.split("/")[2];
 const socket = io("/");
 const peers = [];
+const shareScreenConnections = [];
 let showMsgPanel = false;
 let showParticipantPanel = false;
 let showCourseInfoPanel = false;
+let shareScreenStream = false;
+let shareScreenStatus = false;
 let peer;
 
 // 從prepareRoom切換到meetingRoom
@@ -93,12 +96,43 @@ function formatDate(date) {
   return formattedDate;
 }
 
+function renderSharedScreen(screenStream) {
+  const upperSpaceSection = document.querySelector(".upper_space");
+  const screenVideoContainer = document.createElement("div");
+  screenVideoContainer.setAttribute("class", "screen_container");
+  const video = document.createElement("video");
+  video.srcObject = screenStream;
+  video.autoplay = true;
+  screenVideoContainer.append(video);
+  upperSpaceSection.insertBefore(
+    screenVideoContainer,
+    upperSpaceSection.firstChild
+  );
+}
+
+function removeSharedScreen() {
+  const screenVideoContainer = document.querySelector(".screen_container");
+  screenVideoContainer.remove();
+}
+
+function stopSharingScreen() {
+  shareScreenStream = false;
+  shareScreenStatus = false;
+  removeSharedScreen();
+  for (let i = 0; i < shareScreenConnections.length; i++) {
+    if (shareScreenConnections[i]) {
+      shareScreenConnections[i].close();
+      shareScreenConnections[i] = false;
+    }
+  }
+}
+
 function renderMeetingRoomPage() {
   const upperSpaceSection = document.createElement("section");
   upperSpaceSection.setAttribute("class", "upper_space");
 
   const videoContainerDiv = document.createElement("div");
-  videoContainerDiv.setAttribute("class", "video_container");
+  videoContainerDiv.setAttribute("class", "video_container scrollbar");
   const promptContainerDiv = document.createElement("div");
   promptContainerDiv.setAttribute("class", "prompt_container");
   videoContainerDiv.append(promptContainerDiv);
@@ -298,10 +332,42 @@ function renderMeetingRoomPage() {
   } else {
     taskbarMainFunctionCameraOffBtn.classList.add("elem--hide");
   }
-  const taskbarMainFunctionRaiseHandBtn = document.createElement("button");
-  taskbarMainFunctionRaiseHandBtn.setAttribute("class", "btn__raise_hand");
   const taskbarMainFunctionShareScreenBtn = document.createElement("button");
   taskbarMainFunctionShareScreenBtn.setAttribute("class", "btn__shear_screen");
+  taskbarMainFunctionShareScreenBtn.addEventListener("click", () => {
+    if (shareScreenStatus === "I shared the screen") {
+      shareScreenStream.getVideoTracks()[0].stop();
+      stopSharingScreen();
+    } else if (shareScreenStatus === "remote user shared the screen") {
+      alert("其他用戶正在分享螢幕");
+    } else {
+      navigator.mediaDevices
+        .getDisplayMedia({
+          video: { cursor: "always" },
+          audio: { echoCancellation: true, noiseSuppression: true },
+        })
+        .then((screenStream) => {
+          shareScreenStream = screenStream;
+          shareScreenStatus = "I shared the screen";
+          for (const existCall of peers) {
+            if (existCall) {
+              const options = {
+                metadata: { type: "screen" },
+              };
+              const call = peer.call(existCall.peer, screenStream, options);
+              shareScreenConnections[call.peer] = call;
+            }
+          }
+          renderSharedScreen(screenStream);
+          screenStream.getVideoTracks()[0].onended = function () {
+            stopSharingScreen();
+          };
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  });
   const taskbarMainFunctionLeaveBtn = document.createElement("button");
   taskbarMainFunctionLeaveBtn.setAttribute("class", "btn__leave_room");
   taskbarMainFunctionLeaveBtn.addEventListener("click", () => {
@@ -421,20 +487,25 @@ function startTime() {
 function registerPeer(userId) {
   peer = new Peer(userId, {
     host: "/",
-    port: "443",
-    secure: true,
+    port: "9000",
+    // secure: true,
   });
 
   peer.on("open", (userId) => {
     peer.on("call", (call) => {
-      // 其他用戶嘗試建立call連線時，將我的媒體流傳送給對方
-      call.answer(myStream);
+      if (call.metadata.type === "video") {
+        // 其他用戶嘗試建立視訊連線時，將我的媒體流傳送給對方
+        call.answer(myStream);
+      } else if (call.metadata.type === "screen") {
+        // 其他用戶分享螢幕畫面時
+        call.answer();
+      }
 
       // 把已經在會議室的其他人的視訊畫面加到我的HTML中
-      call.on("stream", (userVideoStream) => {
-        if (!peers[call.peer]) {
+      call.on("stream", (stream) => {
+        if (call.metadata.type === "video" && !peers[call.peer]) {
           addVideoStream(
-            userVideoStream,
+            stream,
             call.metadata.name,
             call.metadata.id,
             call.metadata.camera
@@ -456,6 +527,20 @@ function registerPeer(userId) {
               document.getElementById(participantInfoId);
             participantInfoElem.remove();
             peers[call.peer] = false;
+          });
+        } else if (
+          call.metadata.type === "screen" &&
+          shareScreenStatus === false
+        ) {
+          // 處理他人分享螢幕畫面的媒體流
+          renderSharedScreen(stream);
+          shareScreenStatus = "remote user shared the screen";
+          shareScreenConnections[call.peer] = call;
+
+          call.on("close", () => {
+            removeSharedScreen();
+            shareScreenStatus = false;
+            shareScreenConnections[call.peer] = false;
           });
         }
       });
@@ -569,7 +654,13 @@ function connectedToNewUser(
 ) {
   // 與對方建立peer連線，並將我的視訊和音訊傳遞過去
   const options = {
-    metadata: { name: myName, id: myId, img: myImg, camera: myCameraStatus },
+    metadata: {
+      name: myName,
+      id: myId,
+      img: myImg,
+      camera: myCameraStatus,
+      type: "video",
+    },
   };
   const call = peer.call(userId, myMediaStream, options);
   // 當對方回覆他的視訊和音訊給我時，我要將他的畫面加到我的HTML中
@@ -590,6 +681,11 @@ function connectedToNewUser(
     const participantInfoElem = document.getElementById(participantInfoId);
     participantInfoElem.remove();
     peers[call.peer] = false;
+    if (shareScreenConnections[call.peer]) {
+      // 將對方從分享螢幕的連線中刪除
+      shareScreenConnections[call.peer].close();
+      shareScreenConnections[call.peer] = false;
+    }
   });
 }
 
@@ -605,6 +701,13 @@ socket.on("user-connected", (userId, userName, userImg, cameraStatus) => {
     userInfo.img,
     cameraStatus
   );
+  if (shareScreenStream) {
+    const options = {
+      metadata: { type: "screen" },
+    };
+    const call = peer.call(userId, shareScreenStream, options);
+    shareScreenConnections[userId] = call;
+  }
 });
 
 socket.on("user-disconnected", (userId) => {
