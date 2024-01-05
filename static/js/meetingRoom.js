@@ -487,8 +487,8 @@ function startTime() {
 function registerPeer(userId) {
   peer = new Peer(userId, {
     host: "/",
-    port: "9000",
-    // secure: true,
+    port: "443",
+    secure: true,
   });
 
   peer.on("open", (userId) => {
