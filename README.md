@@ -19,6 +19,8 @@
 
 ## Main Feature
 
+- Authenticate user with `JWT`.
+
 - As a teacher, you can create your own courses.
   ![create course image](static/image/demo/create_course.gif)
 
@@ -36,6 +38,9 @@
 
 - Use `Socket.IO` and `PeerJS` to achieve real-time video conferencing.
   ![entry request image](static/image/demo/entry_request.gif)
+
+- Use `PeerJS` to achieve screen sharing.
+  ![share screen image](static/image/demo/share_screen.gif)
 
 - Use `Socket.IO` to achieve real-time text chat.
   ![text chat image](static/image/demo/text_message.gif)
