@@ -33,16 +33,16 @@
   border: none;
   background-color: transparent;
 }
-.btn__microphone--on {
+.btn__microphone--prepare_on {
   background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/microphone.png);
 }
-.btn__microphone--off {
+.btn__microphone--prepare_off {
   background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/microphone-cross.png);
 }
-.btn__camera--on {
+.btn__camera--prepare_on {
   background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/webcam.png);
 }
-.btn__camera--off {
+.btn__camera--prepare_off {
   background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/webcam-cross.png);
 }
 .confirm {

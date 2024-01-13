@@ -1,11 +1,3 @@
-body {
-  margin: 0;
-  min-height: 100%;
-  width: 100%;
-  position: fixed;
-  top: 0;
-  background-color: black;
-}
 .upper_space {
   height: calc(100vh - 70px);
   width: 95%;
@@ -240,16 +232,16 @@ body {
 .taskbar__main_function button:hover {
   background-color: #404e4d;
 }
-.btn__microphone--on {
+.btn__microphone--meeting_on {
   background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/microphone_light.png);
 }
-.btn__microphone--off {
+.btn__microphone--meeting_off {
   background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/microphone-cross.png);
 }
-.btn__camera--on {
+.btn__camera--meeting_on {
   background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/webcam_light.png);
 }
-.btn__camera--off {
+.btn__camera--meeting_off {
   background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/webcam-cross.png);
 }
 .btn__shear_screen {

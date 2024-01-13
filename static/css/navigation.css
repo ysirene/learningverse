@@ -4,6 +4,14 @@
 .body--more_space {
   margin: 100px 0 0;
 }
+.body--room {
+  margin: 0;
+  min-height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  background-color: black;
+}
 .nav__background--top {
   position: fixed;
   top: 0;
