@@ -363,7 +363,6 @@ addCourseForm.addEventListener("submit", (event) => {
     document.querySelector("#add_course__form")
   );
   const addCourseData = {
-    userId: userInfo.id,
     name: addCourseFormData.get("name"),
     introduction: addCourseFormData.get("introduction"),
     startDate: addCourseFormData.get("start_date"),

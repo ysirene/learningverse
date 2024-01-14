@@ -141,9 +141,8 @@ enrollBtn.addEventListener("click", (event) => {
     return;
   }
   const enrollData = {
-    student_id: userInfo.id,
-    student_role_id: 1,
-    course_id: courseId,
+    studentRoleId: 1,
+    courseId: courseId,
   };
   const src = "/api/myCourse/student";
   const options = {
@@ -185,7 +184,6 @@ auditBtn.addEventListener("click", (event) => {
     return;
   }
   const auditData = {
-    student_id: userInfo.id,
     student_role_id: 2,
     course_id: courseId,
   };
