@@ -133,12 +133,12 @@ async function getSpecificCourseInfoByRoomId(roomId) {
   }
 }
 
-async function insertCourseSelection(student_id, student_role_id, course_id) {
+async function insertCourseSelection(studentId, studentRoleId, courseId) {
   try {
     const conn = await getConnection();
     const sql =
       "INSERT INTO course_selection(student_id, student_role_id, course_id) VALUES(?, ?, ?)";
-    const data = [student_id, student_role_id, course_id];
+    const data = [studentId, studentRoleId, courseId];
     await conn.promise().query(sql, data);
     conn.release();
   } catch (err) {
