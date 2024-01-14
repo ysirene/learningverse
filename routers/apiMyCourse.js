@@ -7,64 +7,81 @@ const router = express.Router();
 
 // middleware
 router.use(express.json());
+function isAuthorized(req, res, next) {
+  const token = req.headers["authorization"];
+  const decodeTokenResult = tokenDataProcessor.decodeToken(token);
+  if (decodeTokenResult == null) {
+    return res.status(400).json({ error: true, message: "invalid token" });
+  } else {
+    req.userInfo = decodeTokenResult;
+    next();
+  }
+}
 
 // 新增課程
-router.post("/teacher", async (req, res) => {
-  const { userId, name, introduction, outline, startDate, endDate, time } =
-    req.body;
-  try {
-    const courseId = await courseDataFetcher.insertCourse(
-      userId,
-      name,
-      introduction,
-      outline,
-      startDate,
-      endDate
-    );
-    await courseDataFetcher.insertCourseTime(courseId, time);
-    return res.status(200).json({ ok: true });
-  } catch (err) {
-    console.log(err);
+router.post("/teacher", isAuthorized, async (req, res) => {
+  if (req.userInfo.role === "teacher") {
+    const userId = req.userInfo.id;
+    const { name, introduction, outline, startDate, endDate, time } = req.body;
+    try {
+      const courseId = await courseDataFetcher.insertCourse(
+        userId,
+        name,
+        introduction,
+        outline,
+        startDate,
+        endDate
+      );
+      await courseDataFetcher.insertCourseTime(courseId, time);
+      return res.status(200).json({ ok: true });
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(500)
+        .json({ error: true, message: "cannot connect to database" });
+    }
+  } else {
     return res
-      .status(500)
-      .json({ error: true, message: "cannot connect to database" });
+      .status(403)
+      .json({ error: true, message: "user has no access rights" });
   }
 });
 
 // 取得授課清單
-router.get("/teacher", async (req, res) => {
-  try {
-    const token = req.headers["authorization"];
-    const decodeTokenResult = tokenDataProcessor.decodeToken(token);
-    const result = await courseDataFetcher.getTeachingList(
-      decodeTokenResult.id
-    );
-    return res.status(200).json({ data: result });
-  } catch (err) {
-    console.log(err);
+router.get("/teacher", isAuthorized, async (req, res) => {
+  if (req.userInfo.role === "teacher") {
+    try {
+      const result = await courseDataFetcher.getTeachingList(req.userInfo.id);
+      return res.status(200).json({ data: result });
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(500)
+        .json({ error: true, message: "cannot connect to database" });
+    }
+  } else {
     return res
-      .status(500)
-      .json({ error: true, message: "cannot connect to database" });
+      .status(403)
+      .json({ error: true, message: "user has no access rights" });
   }
 });
 
 // 取得當下正在進行的課程
-router.get("/now", async (req, res) => {
+router.get("/now", isAuthorized, async (req, res) => {
   try {
     const { weekday, date, time } = req.query;
-    const token = req.headers["authorization"];
-    const decodeTokenResult = tokenDataProcessor.decodeToken(token);
+    const userInfo = req.userInfo;
     let result;
-    if (decodeTokenResult.role == "teacher") {
+    if (userInfo.role == "teacher") {
       result = await courseDataFetcher.getOngoingTeachingCourse(
-        decodeTokenResult.id,
+        userInfo.id,
         weekday,
         time,
         date
       );
-    } else if (decodeTokenResult.role == "student") {
+    } else if (userInfo.role == "student") {
       result = await courseDataFetcher.getOngoingCourse(
-        decodeTokenResult.id,
+        userInfo.id,
         weekday,
         time,
         date
@@ -84,54 +101,62 @@ router.get("/now", async (req, res) => {
 });
 
 // 新增選課
-router.post("/student", async (req, res) => {
-  const { student_id, student_role_id, course_id } = req.body;
-  try {
-    await courseDataFetcher.insertCourseSelection(
-      student_id,
-      student_role_id,
-      course_id
-    );
-    return res.status(200).json({ ok: true });
-  } catch (err) {
-    if (err.code === "ER_CON_COUNT_ERROR") {
-      return res
-        .status(500)
-        .json({ error: true, message: "cannot connect to database" });
-    } else if (err.code === "ER_DUP_ENTRY")
-      return res
-        .status(400)
-        .json({ error: true, message: "data already exist" });
+router.post("/student", isAuthorized, async (req, res) => {
+  if (req.userInfo.role === "student") {
+    const userInfo = req.userInfo;
+    const { studentRoleId, courseId } = req.body;
+    try {
+      await courseDataFetcher.insertCourseSelection(
+        userInfo.id,
+        studentRoleId,
+        courseId
+      );
+      return res.status(200).json({ ok: true });
+    } catch (err) {
+      if (err.code === "ER_CON_COUNT_ERROR") {
+        return res
+          .status(500)
+          .json({ error: true, message: "cannot connect to database" });
+      } else if (err.code === "ER_DUP_ENTRY")
+        return res
+          .status(400)
+          .json({ error: true, message: "data already exist" });
+    }
+  } else {
+    return res
+      .status(403)
+      .json({ error: true, message: "user has no access rights" });
   }
 });
 
 // 取得選課清單
-router.get("/student", async (req, res) => {
-  try {
-    const token = req.headers["authorization"];
-    const decodeTokenResult = tokenDataProcessor.decodeToken(token);
-    const result = await courseDataFetcher.getCourseSelectionList(
-      decodeTokenResult.id
-    );
-    return res.status(200).json({ data: result });
-  } catch (err) {
-    console.log(err);
+router.get("/student", isAuthorized, async (req, res) => {
+  if (req.userInfo.role === "student") {
+    try {
+      const userInfo = req.userInfo;
+      const result = await courseDataFetcher.getCourseSelectionList(
+        userInfo.id
+      );
+      return res.status(200).json({ data: result });
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(500)
+        .json({ error: true, message: "cannot connect to database" });
+    }
+  } else {
     return res
-      .status(500)
-      .json({ error: true, message: "cannot connect to database" });
+      .status(403)
+      .json({ error: true, message: "user has no access rights" });
   }
 });
 
-// 取得使用者在課程中的身分（1:正式選課、2:旁聽、3:老師、4:查無此人）
-router.get("/classRole", async (req, res) => {
+// 取得使用者在課程中的身分
+router.get("/classRole", isAuthorized, async (req, res) => {
   try {
-    const token = req.headers["authorization"];
-    const decodeTokenResult = tokenDataProcessor.decodeToken(token);
+    const userInfo = req.userInfo;
     const { roomId } = req.query;
-    const result = await courseDataFetcher.getClassRole(
-      decodeTokenResult.id,
-      roomId
-    );
+    const result = await courseDataFetcher.getClassRole(userInfo.id, roomId);
     return res.status(200).json({ data: { classRole: result } });
   } catch (err) {
     console.log(err);
