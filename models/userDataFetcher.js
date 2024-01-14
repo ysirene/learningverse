@@ -75,6 +75,3 @@ module.exports = {
   isValidCredential,
   insert,
 };
-
-// module.exports.isValidCredential = isValidCredential();
-// module.exports.insert = insert();
