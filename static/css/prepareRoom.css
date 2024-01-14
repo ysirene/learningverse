@@ -9,6 +9,7 @@
 }
 .media_control {
   width: 60%;
+  position: relative;
 }
 .media_control video {
   width: 100%;
@@ -16,6 +17,12 @@
   object-fit: cover;
   transform: scaleX(-1);
   border-radius: 10px;
+}
+.media_control__loading_icon {
+  position: absolute;
+  color: #afa2ff;
+  top: 40%;
+  left: 47%;
 }
 .media_control__setting {
   display: flex;
