@@ -2,11 +2,11 @@ const getConnection = require("./dbConnector");
 const courseDataProcessor = require("../dataHandling/courseDataProcessor");
 
 async function isRoomIdExists(roomId) {
+  let conn;
   try {
-    const conn = await getConnection();
+    conn = await getConnection();
     const sql = "SELECT * FROM course WHERE room_id = ?";
     const result = await conn.promise().query(sql, [roomId]);
-    conn.release();
     if (result[0].length == 1) {
       return true;
     } else {
@@ -14,22 +14,30 @@ async function isRoomIdExists(roomId) {
     }
   } catch (err) {
     console.log(err);
+  } finally {
+    if (conn) {
+      conn.release();
+    }
   }
 }
 
 async function insertCourseTime(courseId, times) {
+  let conn;
   try {
-    const conn = await getConnection();
+    conn = await getConnection();
     for (const [dayOfWeek, time] of times) {
       const sql =
         "INSERT INTO course_time (course_id, day_of_week, time) VALUES (?, ?, ?)";
       const data = [courseId, dayOfWeek, time];
       await conn.promise().query(sql, data);
-      conn.release();
     }
   } catch (err) {
     console.log(err);
     throw err;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
   }
 }
 
@@ -41,6 +49,7 @@ async function insertCourse(
   startDate,
   endDate
 ) {
+  let conn;
   try {
     let roomId;
     while (true) {
@@ -50,7 +59,7 @@ async function insertCourse(
         break;
       }
     }
-    const conn = await getConnection();
+    conn = await getConnection();
     const sql =
       "INSERT INTO course(name, introduction, outline, teacher_id, room_id, start_date, end_date) VALUES(?, ?, ?, ?, ?, ?, ?)";
     const courseData = [
@@ -64,92 +73,116 @@ async function insertCourse(
     ];
     const [result, fields] = await conn.promise().query(sql, courseData);
     const courseId = result.insertId;
-    conn.release();
     return courseId;
   } catch (err) {
     console.log(err);
     throw err;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
   }
 }
 
 async function getTeachingList(userId) {
+  let conn;
   try {
-    const conn = await getConnection();
+    conn = await getConnection();
     const sql =
       "SELECT course.*, GROUP_CONCAT(CONCAT(course_time.day_of_week,' ',course_time.time) SEPARATOR ', ') AS time \
       FROM course INNER JOIN course_time ON course.id = course_time.course_id \
       AND course.teacher_id = ? GROUP BY course_time.course_id";
     const [result, fields] = await conn.promise().query(sql, [userId]);
-    conn.release();
     return result;
   } catch (err) {
     console.log(err);
     throw err;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
   }
 }
 
 async function getCourseInfoForIndexPage() {
+  let conn;
   try {
-    const conn = await getConnection();
+    conn = await getConnection();
     const sql =
       "SELECT course.*, user.name AS teacher_name \
       FROM course INNER JOIN user ON course.teacher_id = user.id AND course.deleted = 0";
     const [result, fields] = await conn.promise().query(sql);
-    conn.release();
     return result;
   } catch (err) {
     console.log(err);
     throw err;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
   }
 }
 
 async function getSpecificCourseInfo(courseId) {
+  let conn;
   try {
-    const conn = await getConnection();
+    conn = await getConnection();
     const sql =
       "SELECT course.*, user.name AS teacher_name, user.image_name AS teacher_image, GROUP_CONCAT(CONCAT(course_time.day_of_week,' ',course_time.time) SEPARATOR ', ') AS time \
       FROM course INNER JOIN user ON course.teacher_id = user.id  INNER JOIN course_time ON course.id = course_time.course_id AND course.id = ? GROUP BY course_time.course_id";
     const [result, fields] = await conn.promise().query(sql, [courseId]);
-    conn.release();
     return result[0];
   } catch (err) {
     console.log(err);
     throw err;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
   }
 }
 
 async function getSpecificCourseInfoByRoomId(roomId) {
+  let conn;
   try {
-    const conn = await getConnection();
+    conn = await getConnection();
     const sql =
       "SELECT course.*, user.name AS teacher_name, user.image_name AS teacher_image, GROUP_CONCAT(CONCAT(course_time.day_of_week,' ',course_time.time) SEPARATOR ', ') AS time \
       FROM course INNER JOIN user ON course.teacher_id = user.id  INNER JOIN course_time ON course.id = course_time.course_id AND course.room_id = ? GROUP BY course_time.course_id";
     const [result, fields] = await conn.promise().query(sql, [roomId]);
-    conn.release();
     return result[0];
   } catch (err) {
     console.log(err);
     throw err;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
   }
 }
 
-async function insertCourseSelection(student_id, student_role_id, course_id) {
+async function insertCourseSelection(studentId, studentRoleId, courseId) {
+  let conn;
   try {
-    const conn = await getConnection();
+    conn = await getConnection();
     const sql =
       "INSERT INTO course_selection(student_id, student_role_id, course_id) VALUES(?, ?, ?)";
-    const data = [student_id, student_role_id, course_id];
+    const data = [studentId, studentRoleId, courseId];
     await conn.promise().query(sql, data);
-    conn.release();
   } catch (err) {
     console.log(err);
     throw err;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
   }
 }
 
 async function getCourseSelectionList(userId) {
+  let conn;
   try {
-    const conn = await getConnection();
+    conn = await getConnection();
     const sql =
       "SELECT course_selection.*, \
       course.name, course.introduction, course.outline, course.room_id, course.deleted, course.image_name, course.start_date, course.end_date, \
@@ -157,36 +190,44 @@ async function getCourseSelectionList(userId) {
       FROM course_selection INNER JOIN course ON course_selection.course_id = course.id INNER JOIN user ON course.teacher_id = user.id INNER JOIN course_time ON course_selection.course_id = course_time.course_id \
       AND course_selection.student_id = ? GROUP BY course_time.course_id;";
     const [result, fields] = await conn.promise().query(sql, [userId]);
-    conn.release();
     return result;
   } catch (err) {
     console.log(err);
     throw err;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
   }
 }
 
 // 老師取得現在正在進行的課程（for渲染通知在首頁）
 async function getOngoingTeachingCourse(userId, weekday, time, date) {
+  let conn;
   try {
-    const conn = await getConnection();
+    conn = await getConnection();
     const data = [userId, date, date, weekday, time];
     const sql =
       "SELECT course.name, course.room_id FROM course INNER JOIN course_time ON course.id = course_time.course_id \
       AND course.teacher_id = ? AND course.deleted = 0 AND ? > course.start_date AND ? < course.end_date \
       AND course_time.day_of_week = ? AND course_time.time = ?";
     const [result, fields] = await conn.promise().query(sql, data);
-    conn.release();
     return result;
   } catch (err) {
     console.log(err);
     throw err;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
   }
 }
 
 // 學生取得現在正在進行的課程（for渲染通知在首頁）
 async function getOngoingCourse(userId, weekday, time, date) {
+  let conn;
   try {
-    const conn = await getConnection();
+    conn = await getConnection();
     const data = [userId, date, date, weekday, time];
     const sql =
       "SELECT course.name, course.room_id from course \
@@ -196,24 +237,27 @@ async function getOngoingCourse(userId, weekday, time, date) {
       AND ? > course.start_date AND ? < course.end_date \
       AND course_time.day_of_week = ? AND course_time.time = ?";
     const [result, fields] = await conn.promise().query(sql, data);
-    conn.release();
     return result;
   } catch (err) {
     console.log(err);
     throw err;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
   }
 }
 
 // 取在課程中的身分別
 async function getClassRole(userId, roomId) {
+  let conn;
   try {
-    const conn = await getConnection();
+    conn = await getConnection();
     const data = [userId, roomId];
     // 判斷是否為老師
     let sql = "SELECT * FROM course WHERE teacher_id = ? AND room_id = ?";
     let [result, fields] = await conn.promise().query(sql, data);
     if (result.length == 1) {
-      conn.release();
       return "instructor";
     }
     // 若不是老師，則判斷學生的種類
@@ -224,30 +268,36 @@ async function getClassRole(userId, roomId) {
       AND course_selection.student_id = ? AND course.room_id = ?";
     [result, fields] = await conn.promise().query(sql, data);
     if (result.length == 1) {
-      conn.release();
       return result[0]["type"];
     } else {
-      conn.release();
       return "others";
     }
   } catch (err) {
     console.log(err);
     throw err;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
   }
 }
 
 // 取得授課老師的userId
 async function getTeacherId(roomId) {
+  let conn;
   try {
-    const conn = await getConnection();
+    conn = await getConnection();
     const data = [roomId];
     const sql = "SELECT course.teacher_id FROM course WHERE room_id = ?";
     const [result, fields] = await conn.promise().query(sql, data);
-    conn.release();
     return result[0];
   } catch (err) {
     console.log(err);
     throw err;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
   }
 }
 

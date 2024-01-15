@@ -141,9 +141,8 @@ enrollBtn.addEventListener("click", (event) => {
     return;
   }
   const enrollData = {
-    student_id: userInfo.id,
-    student_role_id: 1,
-    course_id: courseId,
+    studentRoleId: 1,
+    courseId: courseId,
   };
   const src = "/api/myCourse/student";
   const options = {
@@ -160,11 +159,13 @@ enrollBtn.addEventListener("click", (event) => {
         enrollBtn.disabled = true;
         applyResultElem.textContent = "報名成功！可至「我的課程」查看";
         applyResultElem.className = "reminder--success";
-      } else if (data.error && data.message === "cannot connect to database") {
-        applyResultElem.textContent = "報名失敗，請稍後再試";
-        applyResultElem.className = "reminder--error";
-      } else if (data.error && data.message === "data already exist") {
-        applyResultElem.textContent = "已報名過此課程，可至「我的課程」查看";
+      } else if (data.error) {
+        const errorMessageMap = {
+          "cannot connect to database": "報名失敗，請稍後再試",
+          "data already exist": "已報名過此課程，可至「我的課程」查看",
+        };
+        applyResultElem.textContent =
+          errorMessageMap["cannot connect to database"];
         applyResultElem.className = "reminder--error";
       }
     })
@@ -185,9 +186,8 @@ auditBtn.addEventListener("click", (event) => {
     return;
   }
   const auditData = {
-    student_id: userInfo.id,
-    student_role_id: 2,
-    course_id: courseId,
+    studentRoleId: 2,
+    courseId: courseId,
   };
   const src = "/api/myCourse/student";
   const options = {

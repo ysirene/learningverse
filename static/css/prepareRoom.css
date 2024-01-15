@@ -9,6 +9,7 @@
 }
 .media_control {
   width: 60%;
+  position: relative;
 }
 .media_control video {
   width: 100%;
@@ -16,6 +17,12 @@
   object-fit: cover;
   transform: scaleX(-1);
   border-radius: 10px;
+}
+.media_control__loading_icon {
+  position: absolute;
+  color: #afa2ff;
+  top: 40%;
+  left: 47%;
 }
 .media_control__setting {
   display: flex;
@@ -33,16 +40,16 @@
   border: none;
   background-color: transparent;
 }
-.btn__microphone--on {
+.btn__microphone--prepare_on {
   background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/microphone.png);
 }
-.btn__microphone--off {
+.btn__microphone--prepare_off {
   background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/microphone-cross.png);
 }
-.btn__camera--on {
+.btn__camera--prepare_on {
   background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/webcam.png);
 }
-.btn__camera--off {
+.btn__camera--prepare_off {
   background-image: url(https://d277hbzet0a7g8.cloudfront.net/icon/webcam-cross.png);
 }
 .confirm {

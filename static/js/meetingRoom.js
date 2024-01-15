@@ -78,7 +78,7 @@ function enterMeetingRoom() {
   const prepareRoomCssLink = document.getElementsByTagName("link")[3];
   prepareRoomCssLink.setAttribute("href", "/css/meetingRoom.css");
   const body = document.getElementsByTagName("body")[0];
-  body.classList.remove("body--normal");
+  body.classList.replace("body--normal", "body--room");
 
   renderMeetingRoomPage();
   addMyVideoStream(myStream, userInfo.name, userInfo.id, myCameraStatus);
@@ -281,20 +281,34 @@ function renderMeetingRoomPage() {
   const taskbarMainFunctionDiv = document.createElement("div");
   taskbarMainFunctionDiv.setAttribute("class", "taskbar__main_function");
   const taskbarMainFunctionMicOffBtn = document.createElement("button");
-  taskbarMainFunctionMicOffBtn.setAttribute("class", "btn__microphone--on");
+  taskbarMainFunctionMicOffBtn.setAttribute(
+    "class",
+    "btn__microphone--meeting_on"
+  );
   taskbarMainFunctionMicOffBtn.addEventListener("click", () => {
-    const turnOffMicBtn = document.querySelector(".btn__microphone--on");
-    const turnOnMicaBtn = document.querySelector(".btn__microphone--off");
+    const turnOffMicBtn = document.querySelector(
+      ".btn__microphone--meeting_on"
+    );
+    const turnOnMicaBtn = document.querySelector(
+      ".btn__microphone--meeting_off"
+    );
     turnOffMicBtn.classList.toggle("elem--hide");
     turnOnMicaBtn.classList.toggle("elem--hide");
     myStream.getAudioTracks()[0].enabled = false;
     myMicrophoneStatus = false;
   });
   const taskbarMainFunctionMicOnBtn = document.createElement("button");
-  taskbarMainFunctionMicOnBtn.setAttribute("class", "btn__microphone--off");
+  taskbarMainFunctionMicOnBtn.setAttribute(
+    "class",
+    "btn__microphone--meeting_off"
+  );
   taskbarMainFunctionMicOnBtn.addEventListener("click", () => {
-    const turnOffMicBtn = document.querySelector(".btn__microphone--on");
-    const turnOnMicaBtn = document.querySelector(".btn__microphone--off");
+    const turnOffMicBtn = document.querySelector(
+      ".btn__microphone--meeting_on"
+    );
+    const turnOnMicaBtn = document.querySelector(
+      ".btn__microphone--meeting_off"
+    );
     turnOffMicBtn.classList.toggle("elem--hide");
     turnOnMicaBtn.classList.toggle("elem--hide");
     myStream.getAudioTracks()[0].enabled = true;
@@ -306,10 +320,13 @@ function renderMeetingRoomPage() {
     taskbarMainFunctionMicOffBtn.classList.add("elem--hide");
   }
   const taskbarMainFunctionCameraOffBtn = document.createElement("button");
-  taskbarMainFunctionCameraOffBtn.setAttribute("class", "btn__camera--on");
+  taskbarMainFunctionCameraOffBtn.setAttribute(
+    "class",
+    "btn__camera--meeting_on"
+  );
   taskbarMainFunctionCameraOffBtn.addEventListener("click", () => {
-    const turnOffCameraBtn = document.querySelector(".btn__camera--on");
-    const turnOnCameraBtn = document.querySelector(".btn__camera--off");
+    const turnOffCameraBtn = document.querySelector(".btn__camera--meeting_on");
+    const turnOnCameraBtn = document.querySelector(".btn__camera--meeting_off");
     turnOffCameraBtn.classList.toggle("elem--hide");
     turnOnCameraBtn.classList.toggle("elem--hide");
     myStream.getVideoTracks()[0].enabled = false;
@@ -317,10 +334,13 @@ function renderMeetingRoomPage() {
     socket.emit("camera-status-change", userInfo.id);
   });
   const taskbarMainFunctionCameraOnBtn = document.createElement("button");
-  taskbarMainFunctionCameraOnBtn.setAttribute("class", "btn__camera--off");
+  taskbarMainFunctionCameraOnBtn.setAttribute(
+    "class",
+    "btn__camera--meeting_off"
+  );
   taskbarMainFunctionCameraOnBtn.addEventListener("click", () => {
-    const turnOffCameraBtn = document.querySelector(".btn__camera--on");
-    const turnOnCameraBtn = document.querySelector(".btn__camera--off");
+    const turnOffCameraBtn = document.querySelector(".btn__camera--meeting_on");
+    const turnOnCameraBtn = document.querySelector(".btn__camera--meeting_off");
     turnOffCameraBtn.classList.toggle("elem--hide");
     turnOnCameraBtn.classList.toggle("elem--hide");
     myStream.getVideoTracks()[0].enabled = true;
