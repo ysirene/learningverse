@@ -13,11 +13,32 @@
     />
     <title>Learningverse</title>
   </head>
-  <body class="body--normal">
+  <body class="body--normal scrollbar">
     <%- include("partials/navigation") %> <%- include("partials/member") %>
     <main class="container">
       <img class="user_img" />
-      <!-- <div class="user_name">李亞珊</div> -->
+      <section class="text_container">
+        <form id="newUserImage" onsubmit="uploadUserImg(event)">
+          <label
+            >修改頭像：<input
+              class="input__choose_file"
+              type="file"
+              accept="image/*"
+              name="image"
+              required
+          /></label>
+          <input class="input__submit" type="submit" value="送出" />
+          <input
+            class="input__submit--disabled elem--hide"
+            type="submit"
+            value="請稍後..."
+            disabled
+          />
+        </form>
+        <div>姓名：<span id="user_name"></span></div>
+        <div>身分：<span id="user_role"></span></div>
+        <div>電子信箱：<span id="user_email"></span></div>
+      </section>
     </main>
     <%- include("partials/footer") %>
     <script type="text/javascript" src="/js/navigation.js" defer></script>

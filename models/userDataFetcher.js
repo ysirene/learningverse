@@ -71,7 +71,26 @@ async function insert(name, email, password, role) {
   }
 }
 
+async function updateUserImage(userId, imageName) {
+  let conn;
+  try {
+    conn = await getConnection();
+    const sql = "UPDATE user SET image_name = ? WHERE id = ?";
+    const data = [imageName, userId];
+    await conn.promise().query(sql, data);
+    return true;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
+  }
+}
+
 module.exports = {
   isValidCredential,
   insert,
+  updateUserImage,
 };
