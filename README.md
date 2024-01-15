@@ -19,7 +19,7 @@
 
 ## Main Feature
 
-- Authenticate user with `JWT`.
+- Authenticate user with `JWT` and implement by `Express.js middleware`.
 
 - As a teacher, you can create your own courses.
   ![create course image](static/image/demo/create_course.gif)
@@ -55,7 +55,7 @@
 
 ### Backend
 
-- Environment: Node.js/Express.js
+- Environment: Node.js / Express.js
 - SSR: EJS
 - Database: MySQL
 - Authentication: JSON Web Token (JWT)
