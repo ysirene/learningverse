@@ -8,6 +8,7 @@
       <form id="signin_form" onsubmit="signin(event)">
         <input
           class="member__input"
+          id="signin_form__email"
           type="text"
           name="email"
           placeholder="輸入電子信箱"
@@ -15,6 +16,7 @@
         />
         <input
           class="member__input"
+          id="signin_form__password"
           type="password"
           name="password"
           placeholder="輸入密碼"
@@ -22,6 +24,10 @@
         />
         <input class="member__submit" type="submit" value="登入帳戶" />
       </form>
+      <div class="test_account">
+        <button onclick="fillInTestAccountInfo('teacher')">教師測試帳戶</button>
+        <button onclick="fillInTestAccountInfo('student')">學生測試帳戶</button>
+      </div>
       <div class="member__text--normal" id="signin_text">
         <div class="member__text--error"></div>
         <span>還沒有帳戶？</span>
