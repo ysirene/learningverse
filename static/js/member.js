@@ -156,3 +156,13 @@ function signin(event) {
       });
   }
 }
+function fillInTestAccountInfo(role) {
+  const testAccountInfo = {
+    teacher: ["teacher@test.com", "teacher"],
+    student: ["student@test.com", "student"],
+  };
+  const emailInput = document.querySelector("#signin_form__email");
+  const passwordInput = document.querySelector("#signin_form__password");
+  emailInput.value = testAccountInfo[role][0];
+  passwordInput.value = testAccountInfo[role][1];
+}

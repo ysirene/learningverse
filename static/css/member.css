@@ -153,3 +153,19 @@
 .member__text--pointer {
   cursor: pointer;
 }
+.test_account {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto 10px;
+  width: 310px;
+}
+.test_account button {
+  border: none;
+  border-radius: 5px;
+  background-color: #ccc;
+  color: #000;
+  font-size: 16px;
+  height: 35px;
+  width: 150px;
+  cursor: pointer;
+}

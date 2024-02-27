@@ -188,8 +188,18 @@ function showCourseNotification() {
   }
 })();
 
+// 填入測試教室代碼
+const fillInTestCodeBtn = document.querySelector(
+  "#enter_room__fill_in_test_code"
+);
+fillInTestCodeBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  const formInput = document.querySelector(".enter_room__search_input");
+  formInput.value = "KtZ-CJy-XAi";
+});
+
 // 根據代碼或連結進入教室
-const searchRoomBtn = document.querySelector(".enter_room__search_btn");
+const searchRoomBtn = document.querySelector("#enter_room__search_btn");
 searchRoomBtn.addEventListener("click", (e) => {
   e.preventDefault();
   const formInput = document.querySelector(".enter_room__search_input");

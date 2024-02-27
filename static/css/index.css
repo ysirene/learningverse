@@ -50,7 +50,7 @@
   height: 35px;
   font-size: 18px;
 }
-.enter_room__search_btn {
+.enter_room button {
   padding: 5px 10px;
   background-color: transparent;
   border-radius: 5px;
